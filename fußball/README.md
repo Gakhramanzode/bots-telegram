@@ -4,7 +4,7 @@ Fußball Bot - это бот для Telegram, который помогает в
 
 ## API
 
-Для получения информации о футбольных матчах бот использует [API сервиса](https://www.football-data.org/). Чтобы использовать бота, вам необходимо зарегистрироваться на [сайте](https://www.football-data.org/) и получить API-ключ.
+Для получения информации о футбольных матчах бот использует [API сервиса football-data.org](https://www.football-data.org/). Чтобы использовать бота, вам необходимо зарегистрироваться на [сайте](https://www.football-data.org/) и получить API-ключ.
 
 ## Команды
 
@@ -25,10 +25,16 @@ Fußball Bot - это бот для Telegram, который помогает в
 
 - Python 3
 - python-telegram-bot
+- requests
+- pytz
+- schedule
 
 Вы можете установить их с помощью следующих команд:
 
-`sudo yum install python3 pip3 install python-telegram-bot`
+```
+sudo yum install python3 -y
+sudo pip3 install python-telegram-bot requests pytz schedule
+```
 
 ## Запуск
 

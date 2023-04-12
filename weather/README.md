@@ -16,7 +16,10 @@ Weather Bot - это бот для Telegram, который помогает в�
 
 Вы можете установить их с помощью следующих команд:
 
-`sudo yum install python3 pip3 install python-telegram-bot requests`
+```
+sudo yum install python3 -y
+sudo pip3 install python-telegram-bot requests
+```
 
 ## Запуск
 
