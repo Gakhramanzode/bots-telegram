@@ -3,10 +3,11 @@ from datetime import datetime, time, timedelta
 import pytz
 import schedule
 import time as t
+import os
 
-TOKEN = "TOKEN"
-CHAT_ID = "CHAT_ID"
-API_TOKEN = "API_TOKEN"
+TOKEN = os.environ.get('footbal_TOKEN')
+CHAT_ID = os.environ.get('footbal_CHAT_ID')
+API_TOKEN = os.environ.get('footbal_API_TOKEN')
 
 TEAMS = {
     113: "Napoli",
@@ -14,7 +15,8 @@ TEAMS = {
     61: "Chelsea",
     65: "Manchester City",
     516: "Marseille",
-    5: "Bayern München"
+    5: "Bayern München",
+    4: "Borussia Dortmund"
 }
 
 def get_upcoming_matches(team_id):

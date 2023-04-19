@@ -11,6 +11,7 @@
 1. fridge
 2. fußball
 3. weather
+4. generate
 
 ## Использование
 

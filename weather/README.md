@@ -25,7 +25,7 @@ sudo pip3 install python-telegram-bot requests
 
 Чтобы запустить Weather Bot, перейдите в папку с кодом и выполните следующую команду:
 
-`python3 weather.py`
+`python3 bot-weather.py`
 
 ## Использование
 

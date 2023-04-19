@@ -29,7 +29,7 @@ sudo make altinstall
 
 Чтобы запустить Fridge Bot, перейдите в папку с кодом и выполните следующую команду:
 
-`python3.9 fridge-bot-tg.py`
+`python3.9 bot-fridge.py`
 
 ## Использование
 

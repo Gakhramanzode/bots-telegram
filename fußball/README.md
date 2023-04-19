@@ -40,7 +40,7 @@ sudo pip3 install python-telegram-bot requests pytz schedule
 
 Чтобы запустить Fußball Bot, перейдите в папку с кодом и выполните следующую команду:
 
-`python3 fußball.py`
+`python3 bot-fußball.py`
 
 ## Использование
 

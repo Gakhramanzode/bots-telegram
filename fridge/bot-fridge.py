@@ -2,37 +2,37 @@ import telebot
 from telebot import types
 import mysql.connector
 import datetime
+import os
 
 users = {} # объявляем пустой словарь в глобальной области видимости
 
 # Подключение к базе данных MySQL
 db = mysql.connector.connect(
-    host="host",
-    user="user",
-    password="password",
-    database="database"
+    host=os.environ.get('fridge_host'),
+    user=os.environ.get('fridge_user'),
+    password=os.environ.get('fridge_password'),
+    database=os.environ.get('fridge_database')
 )
 cursor = db.cursor()
 
-# Токен бота Telegram
-bot = telebot.TeleBot("token")
+bot = telebot.TeleBot(os.environ.get('fridge_bot'))
 
 # Обработка команды /start
 @bot.message_handler(commands=['start'])
 def start(message):
-    query = ""
+    query = "SELECT `user`, pass, id, tg_id FROM u1603907_publications1.members;"
     cursor.execute(query)
     members = cursor.fetchall()
     global users # используем глобальный словарь
     for member in members:
         users[member[3]] = member[0]
     chat_id = message.chat.id
-    bot.send_message(message.chat.id, '', parse_mode= 'Markdown')
+    bot.send_message(message.chat.id, 'Давайте определимся кто вы 👇\n\nЕсли ранее *не регистрировались* на [сайте](http://51.250.80.104/) и являетесь новым пользователем:\n1. Отправьте этому боту команду `/myid`\n2. Скопируйте полученные цифры\n3. Перейдите на [наш сайт](http://51.250.80.104/)\n4. Зарегистрируйтесь\n5. Перейдите на [страницу подключения](http://51.250.80.104/telegram.php)\n6. Добавьте свой ID\n7. Возвращайтесь сюда и пользуйтесь ботом\n\nЕсли вы уже *являетесь* пользователем сервиса:\n1. Отправьте команду `/myid`\n2. Скопируйте полученные цифры\n3. Перейдите на [страницу подключения](http://51.250.80.104/telegram.php)\n4. Добавьте свой ID\n5. Возвращайтесь сюда и пользуйтесь ботом\n\nЕсли вы ранее уже пользовались ботом, то вы и так все знаете 😇\n\nС возвращением!', parse_mode= 'Markdown')
 
 # Обработка команды /mylist
 @bot.message_handler(commands=['mylist'])
 def mylist(message):
-    query = ""
+    query = "SELECT `user`, pass, id, tg_id FROM u1603907_publications1.members;"
     cursor.execute(query)
     members = cursor.fetchall()
     global users
@@ -41,7 +41,7 @@ def mylist(message):
     chat_id = message.chat.id
     if chat_id in users:
         username = users[chat_id]
-        query = f""
+        query = f"SELECT id, Name, ProductionDate, ExpirationDate, `type` FROM u1603907_publications1.{username} ORDER BY ExpirationDate ASC;"
         cursor.execute(query)
         products = cursor.fetchall()
         if not products:
@@ -77,7 +77,7 @@ def get_expiration_date(message):
     global username
     expiration_date = message.text
     try:
-        query = f""
+        query = f"INSERT INTO u1603907_publications1.{username} (Name, ProductionDate, ExpirationDate, `type`) VALUES ('{name}', '{datetime.date.today()}', '{expiration_date}', NULL)"
         cursor.execute(query)
         db.commit()
         bot.send_message(message.chat.id, "Продукт успешно добавлен")
@@ -90,7 +90,7 @@ def delete(message):
     chat_id = message.chat.id
     if chat_id in users:
         username = users[chat_id]
-        query = f""
+        query = f"SELECT id, Name, ProductionDate, ExpirationDate, `type` FROM u1603907_publications1.{username} ORDER BY ExpirationDate ASC;"
         cursor.execute(query)
         products = cursor.fetchall()
         if not products:
@@ -110,7 +110,7 @@ def callback_delete(call):
     if chat_id in users:
         username = users[chat_id]
         product_id = call.data.split("_")[1]
-        query = f""
+        query = f"DELETE FROM u1603907_publications1.{username} WHERE id={product_id};"
         cursor.execute(query)
         db.commit()
         bot.answer_callback_query(call.id, "Продукт удален")
@@ -140,7 +140,7 @@ def process_time_step(message):
         try:
             datetime.datetime.strptime(time, '%H:%M')
             username = users[chat_id]
-            query = f""
+            query = f"UPDATE u1603907_publications1.members SET reminder_time='{time}' WHERE user='{username}';"
             cursor.execute(query)
             db.commit()
             bot.send_message(chat_id, "Время напоминания сохранено")
@@ -156,7 +156,7 @@ def unschedule(message):
     chat_id = message.chat.id
     if chat_id in users:
         username = users[chat_id]
-        query = f""
+        query = f"UPDATE u1603907_publications1.members SET reminder_time=NULL WHERE user='{username}';"
         cursor.execute(query)
         db.commit()
         bot.send_message(chat_id, "Напоминание отменено")
@@ -167,7 +167,7 @@ def unschedule(message):
 @bot.message_handler(commands=['info'])
 def start_message(message):
   keyboard = types.InlineKeyboardMarkup()  
-  keyboard.add(types.InlineKeyboardButton('Перейти на сайт', url=''))
+  keyboard.add(types.InlineKeyboardButton('Перейти на сайт', url='http://51.250.80.104/'))
   bot.send_message(message.chat.id, 'Сайт сервиса 👇', reply_markup=keyboard)
 
 # Запуск бота
