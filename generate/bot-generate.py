@@ -41,4 +41,9 @@ def generate_password(message):
     escaped_password = escape_markdown(password) # Экранирование специальных символов в пароле
     bot.send_message(message.chat.id, f'Your password:\n```\n{escaped_password}\n```', parse_mode='MarkdownV2') # Отправка пароля пользователю в формате monospace
 
+@bot.message_handler(commands=['generate_port_number'])
+def generate_port_number(message):
+    port = random.randint(49152, 65535)
+    bot.send_message(message.chat.id, f'Random port number:\n```\n{port}\n```', parse_mode='MarkdownV2')
+
 bot.polling() # Запуск бота
