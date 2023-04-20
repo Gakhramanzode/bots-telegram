@@ -1,6 +1,6 @@
 # Fridge Bot
 
-Fridge Bot - это бот для Telegram, который помогает вам отслеживать содержимое вашего холодильника. Более подробно проект описан [в этом репозитории](https://github.com/Gakhramanzode/fridge-v3)
+Fridge Bot - это бот для Telegram, который помогает вам отслеживать содержимое вашего холодильника. [Ссылка](https://t.me/fridge_asker_bot) на пример бота. Более подробно проект описан [в этом репозитории](https://github.com/Gakhramanzode/fridge-v3). 
 
 ## Установка
 
