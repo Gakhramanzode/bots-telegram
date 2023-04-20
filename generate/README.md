@@ -31,7 +31,8 @@ sudo make altinstall
 
 ## Использование
 
-После запуска бота вы можете использовать его для генерации никнеймов, паролей и логических портов. Для этого отправьте ему сообщение `/generate_nickname`, `/generate_password` или `/generate_port_number`. 
+После запуска бота вы можете использовать его для генерации никнеймов, паролей, логических портов. Для этого отправьте ему сообщение `/generate_nickname`, `/generate_password` или `/generate_port_number`. 
 
 Пример диалога с ботом:
-<img width="384" alt="Снимок экрана 2023-04-19 103909" src="https://user-images.githubusercontent.com/62985982/233398424-1aaa700a-ab13-474d-b3e1-c411b73c38a4.png">
+
+<img width="385" alt="Снимок экрана 2023-04-20 173537" src="https://user-images.githubusercontent.com/62985982/233399773-1260186a-201a-4ff0-9da8-755d6f120a28.png">
