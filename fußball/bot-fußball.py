@@ -35,12 +35,12 @@ def get_upcoming_matches(team_id):
             date = moscow_date.strftime("%d %B %Y %H:%M")
             home_team = match["homeTeam"]["name"]
             away_team = match["awayTeam"]["name"]
-            matches.append(f"{home_team} vs {away_team} on {date} (Moscow time)")
+            matches.append(f"*{home_team}* vs *{away_team}* on *{date}* (Moscow time)")
     return matches
 
 def send_message(text):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    data = {"chat_id": CHAT_ID, "text": text}
+    data = {"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"}
     requests.post(url, data=data)
 
 def job():

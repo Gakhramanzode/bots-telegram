@@ -1,0 +1,67 @@
+# Имя workflow
+name: Update files on CentOS server
+
+# Триггеры для запуска workflow
+on:
+  # Запуск при фиксации изменений в репозитории
+  push:
+    # Отслеживание изменений только в определенных файлах
+    paths:
+      - 'fridge\bot-fridge.py'
+      - 'fußball\bot-fußball.py'
+      - 'generate\bot-generate.py'
+      - 'weather\bot-weather.py'
+
+# Определение задачи
+jobs:
+  # Имя задачи
+  deploy:
+    # Операционная система для запуска задачи
+    runs-on: ubuntu-latest
+    # Шаги для выполнения задачи
+    steps:
+      # Шаг 1: Получение кода репозитория
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      # Шаг 2: Копирование файлов на сервер CentOS
+      - name: Copy files to CentOS server
+        uses: appleboy/scp-action@master
+        with:
+          # Адрес сервера CentOS
+          host: ${{ secrets.SERVER_HOST }}
+          # Имя пользователя для подключения к серверу CentOS
+          username: ${{ secrets.SERVER_USERNAME }}
+          # Ключ SSH для подключения к серверу CentOS
+          key: ${{ secrets.SERVER_KEY }}
+          # Файлы для копирования на сервер CentOS
+          source: "path/to/file1,path/to/file2"
+          # Директория на сервере CentOS для копирования файлов
+          target: "/path/on/server"
+
+      # Шаг 3: Перезагрузка службы systemd на сервере CentOS
+      - name: Restart systemd service on CentOS server
+        uses: appleboy/ssh-action@master
+        with:
+          # Адрес сервера CentOS
+          host: ${{ secrets.SERVER_HOST }}
+          # Имя пользователя для подключения к серверу CentOS
+          username: ${{ secrets.SERVER_USERNAME }}
+          # Ключ SSH для подключения к серверу CentOS
+          key: ${{ secrets.SERVER_KEY }}
+          # Команды для выполнения на сервере CentOS
+          script: |
+            # Получение списка измененных файлов
+            CHANGED_FILES=$(echo '${{ join(github.event.commits.*.modified, ' ') }}')
+            # Определение имени службы systemd на основе имени измененного файла
+            if [[ $CHANGED_FILES == *"bot-fridge.py"* ]]; then
+              sudo systemctl restart bot-fridge.service
+            fi
+            if [[ $CHANGED_FILES == *"bot-fußball.py"* ]]; then
+              sudo systemctl restart bot-footbal.service
+            fi
+            if [[ $CHANGED_FILES == *"bot-generate.py"* ]]; then
+              sudo systemctl restart bot-generate.service
+            fi
+            if [[ $CHANGED_FILES == *"bot-weather.py"* ]]; then
+              sudo systemctl restart bot-weather.service
+            fi
