@@ -34,9 +34,9 @@ jobs:
           # Ключ SSH для подключения к серверу CentOS
           key: ${{ secrets.SERVER_KEY }}
           # Файлы для копирования на сервер CentOS
-          source: "path/to/file1,path/to/file2"
+          source: "${{ join(github.event.commits.*.modified, ',') }}"
           # Директория на сервере CentOS для копирования файлов
-          target: "/path/on/server"
+          target: "/home/bot/bots-tg/"
 
       # Шаг 3: Перезагрузка службы systemd на сервере CentOS
       - name: Restart systemd service on CentOS server
