@@ -7,10 +7,10 @@ on:
   push:
     # Отслеживание изменений только в определенных файлах
     paths:
-      - 'fridge\bot-fridge.py'
-      - 'fußball\bot-fußball.py'
-      - 'generate\bot-generate.py'
-      - 'weather\bot-weather.py'
+      - 'fridge/bot-fridge.py'
+      - 'fußball/bot-fußball.py'
+      - 'generate/bot-generate.py'
+      - 'weather/bot-weather.py'
 
 # Определение задачи
 jobs:
