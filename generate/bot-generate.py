@@ -43,6 +43,9 @@ def generate_password(message):
 
 @bot.message_handler(commands=['generate_port_number'])
 def generate_port_number(message):
+    """
+    Обработчик команды /generate_port_number. Генерирует случайный пароль логический порт для TCP/UPD.
+    """
     port = random.randint(49152, 65535)
     bot.send_message(message.chat.id, f'Random port numberS:\n```\n{port}\n```', parse_mode='MarkdownV2')
 

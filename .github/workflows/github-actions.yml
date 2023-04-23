@@ -36,7 +36,7 @@ jobs:
           # Файлы для копирования на сервер CentOS
           source: "${{ join(github.event.commits.*.modified, ',') }}"
           # Директория на сервере CentOS для копирования файлов
-          target: "/home/centos"
+          target: "/home/centos/"
 
       # Шаг 3: Перезагрузка службы systemd на сервере CentOS
       - name: Restart systemd service on CentOS server
