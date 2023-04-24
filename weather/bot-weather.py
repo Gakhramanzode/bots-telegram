@@ -81,7 +81,7 @@ def get_weather():
         wind_speed_2 = data_2['wind']['speed']
         humidity_2 = data_2['main']['humidity']
 
-        return f'Прогноз погоды в районе Раменки г. Москва:\n\n{description_1} {icon_1}\nТемпература: {temp_1}°C\nОщущается как: {feels_like_1}°C\nВлажность {humidity_1}%\nСкорость ветра: {wind_speed_1} м/с\n\nПрогноз погоды в дачном посёлке Тихая Речка Московская область:\n\n{description_2} {icon_2}\nТемпература: {temp_2}°C\nОщущается как: {feels_like_2}°C\nВлажность {humidity_2}%\nСкорость ветра: {wind_speed_2} м/с'
+        return f'Погода в районе Раменки:\n\n{description_1} {icon_1}\nТемпература: {temp_1}°C\nОщущается как: {feels_like_1}°C\nВлажность {humidity_1}%\nСкорость ветра: {wind_speed_1} м/с\n\nПрогноз погоды в дачном посёлке Тихая Речка:\n\n{description_2} {icon_2}\nТемпература: {temp_2}°C\nОщущается как: {feels_like_2}°C\nВлажность {humidity_2}%\nСкорость ветра: {wind_speed_2} м/с'
     except Exception as e:
         print(e)
         return 'Не удалось получить прогноз погоды'
