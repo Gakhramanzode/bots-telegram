@@ -19,7 +19,9 @@ TEAMS = {
     65: "Manchester City",
     516: "Marseille",
     5: "Bayern München",
-    4: "Borussia Dortmund"
+    4: "Borussia Dortmund",
+    3239: "AS Roma",
+    165: "Bayer 04 Leverkusen"
 }
 
 def get_upcoming_matches(team_id):
