@@ -40,6 +40,7 @@ jobs:
       - name: Copy file to remote server
         run: |
           mkdir -p ~/.ssh
+          echo "${{ secrets.generate_ssh_known_hosts }}" >> ~/.ssh/known_hosts
           echo "${{ secrets.generate_ssh_private_key }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           scp generate/bot-generate.py ${{ secrets.username }}@${{ secrets.remote_host }}:${{ secrets.generate_path_to_destination }}
