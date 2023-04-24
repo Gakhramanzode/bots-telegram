@@ -58,7 +58,6 @@ jobs:
         with:
           name: my-artifact
 
-    steps:
       # Шаг 2: Копируем файл на удаленный сервер с помощью scp
       - name: Copy file to remote server
         run: |
