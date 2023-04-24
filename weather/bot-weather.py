@@ -5,20 +5,22 @@ import time
 from datetime import datetime, timedelta
 from pytz import timezone
 
+if os.environ.get('CI'):
+    exit(0)
+
 # Задаем константы
-TOKEN = 'TOKEN'
-CHAT_ID = 'CHAT_ID'
-API_KEY = 'API_KEY'
-CITY_ID = 'CITY_ID' # ID города
-TIMEZONE = 'TIMEZONE' # Часовой пояс
+TOKEN = os.environ.get('weather_TOKEN')
+CHAT_ID = os.environ.get('weather_CHAT_ID')
+API_KEY = os.environ.get('weather_API_KEY')
+TIMEZONE = os.environ.get('weather_TIMEZONE')
 
 # Задаем координаты города 1
-LAT_1 = LAT_1
-LON_1 = LON_1
+weather_CITY_1_LAT = os.environ.get('weather_CITY_1_LAT')
+weather_CITY_1_LON = os.environ.get('weather_CITY_1_LON')
 
 # Задаем координаты города 2
-LAT_1 = LAT_1
-LON_2 = LON_2
+weather_CITY_2_LAT = os.environ.get('weather_CITY_2_LAT')
+weather_CITY_2_LON = os.environ.get('weather_CITY_2_LON')
 
 # Создаем объект бота
 bot = telegram.Bot(token=TOKEN)
@@ -54,7 +56,7 @@ def get_weather_emoji(icon_code):
 # Функция получения прогноза погоды
 def get_weather():
     try:
-        url_1 = f'https://api.openweathermap.org/data/2.5/weather?lat={LAT_1}&lon={LON_1}&appid={API_KEY}&lang=ru&units=metric'
+        url_1 = f'https://api.openweathermap.org/data/2.5/weather?lat={weather_CITY_1_LAT}&lon={weather_CITY_1_LON}&appid={API_KEY}&lang=ru&units=metric'
         response_1 = requests.get(url_1)
         data_1 = json.loads(response_1.text)
         description_1 = data_1['weather'][0]['description']
@@ -66,7 +68,7 @@ def get_weather():
         wind_speed_1 = data_1['wind']['speed']
         humidity_1 = data_1['main']['humidity']
 
-        url_2 = f'https://api.openweathermap.org/data/2.5/weather?lat={LAT_2}&lon={LON_2}&appid={API_KEY}&lang=ru&units=metric'
+        url_2 = f'https://api.openweathermap.org/data/2.5/weather?lat={weather_CITY_2_LAT}&lon={weather_CITY_2_LON}&appid={API_KEY}&lang=ru&units=metric'
         response_2 = requests.get(url_2)
         data_2 = json.loads(response_2.text)
         description_2 = data_2['weather'][0]['description']
