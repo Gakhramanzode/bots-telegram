@@ -48,3 +48,54 @@ jobs:
         with:
           name: my-artifact-bot-weather
           path: weather/bot-weather.py
+
+# Задача с именем "deploy"
+  deploy:
+    # Запускаем задачу на виртуальной машине с Ubuntu
+    runs-on: ubuntu-latest
+
+    # Задаем зависимость от задачи "test"
+    needs: test
+
+    # Определяем шаги (steps) для выполнения задачи
+    steps:
+      # Шаг 1: Загружаем артефакт с нужными файлами
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: my-artifact-bot-weather
+
+      # Шаг 2: Копируем файл на удаленный сервер с помощью scp
+      - name: Copy file to remote server
+        run: |
+          # Создание каталога .ssh в домашней директории пользователя 
+          mkdir -p ~/.ssh
+          # Добавление известных хостов в файл known_hosts
+          echo "${{ secrets.ssh_known_hosts }}" >> ~/.ssh/known_hosts
+          # Добавление закрытого ключа SSH в файл id_rsa
+          echo "${{ secrets.ssh_private_key }}" > ~/.ssh/id_rsa
+          # Изменение прав доступа к файлу id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          # Выполнение команды для отправки python-файла на удаленный сервер
+          scp /home/runner/work/bots-telegram/bots-telegram/bot-weather.py ${{ secrets.username }}@${{ secrets.remote_host }}:${{ secrets.path_to_destination }}
+
+  # Задача с именем "reload"
+  reload:
+    # Запускаем задачу на виртуальной машине с Ubuntu
+    runs-on: ubuntu-latest
+    # Задача запускается только после успешного выполнения задачи "deploy"
+    needs: deploy
+    steps:
+      # Шаг для перезагрузки службы systemd на удаленном сервере
+      - name: Reload systemd service on remote server
+        run: |
+          # Создание каталога .ssh в домашней директории пользователя
+          mkdir -p ~/.ssh
+          # Добавление известных хостов в файл known_hosts
+          echo "${{ secrets.ssh_known_hosts }}" >> ~/.ssh/known_hosts
+          # Добавление закрытого ключа SSH в файл id_rsa
+          echo "${{ secrets.ssh_private_key }}" > ~/.ssh/id_rsa
+          # Изменение прав доступа к файлу id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          # Выполнение команды для перезагрузки службы systemd на удаленном сервере
+          ssh ${{ secrets.username }}@${{ secrets.remote_host }} 'sudo systemctl restart bot-weather.service'
