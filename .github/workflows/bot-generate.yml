@@ -35,6 +35,7 @@ jobs:
         run: python generate/bot-generate.py
         env:
           generate_bot: ${{ secrets.generate_bot }}
+
       # Шаг 5: Загружаем файл как артефакт
       - name: Upload file as artifact
         uses: actions/upload-artifact@v2
@@ -65,4 +66,4 @@ jobs:
           echo "${{ secrets.generate_ssh_known_hosts }}" >> ~/.ssh/known_hosts
           echo "${{ secrets.generate_ssh_private_key }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          scp my-artifact/bot-generate.py ${{ secrets.username }}@${{ secrets.remote_host }}:${{ secrets.generate_path_to_destination }}
+          scp /home/runner/work/bots-telegram/bots-telegram/bot-generate.py ${{ secrets.username }}@${{ secrets.remote_host }}:${{ secrets.generate_path_to_destination }}
