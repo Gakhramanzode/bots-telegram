@@ -65,13 +65,13 @@ jobs:
           # Создание каталога .ssh в домашней директории пользователя 
           mkdir -p ~/.ssh
           # Добавление известных хостов в файл known_hosts
-          echo "${{ secrets.generate_ssh_known_hosts }}" >> ~/.ssh/known_hosts
+          echo "${{ secrets.ssh_known_hosts }}" >> ~/.ssh/known_hosts
           # Добавление закрытого ключа SSH в файл id_rsa
-          echo "${{ secrets.generate_ssh_private_key }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.ssh_private_key }}" > ~/.ssh/id_rsa
           # Изменение прав доступа к файлу id_rsa
           chmod 600 ~/.ssh/id_rsa
           # Выполнение команды для отправки python-файла на удаленный сервер
-          scp /home/runner/work/bots-telegram/bots-telegram/bot-generate.py ${{ secrets.username }}@${{ secrets.remote_host }}:${{ secrets.generate_path_to_destination }}
+          scp /home/runner/work/bots-telegram/bots-telegram/bot-generate.py ${{ secrets.username }}@${{ secrets.remote_host }}:${{ secrets.path_to_destination }}
 
   # Задача с именем "reload"
   reload:
@@ -86,9 +86,9 @@ jobs:
           # Создание каталога .ssh в домашней директории пользователя
           mkdir -p ~/.ssh
           # Добавление известных хостов в файл known_hosts
-          echo "${{ secrets.generate_ssh_known_hosts }}" >> ~/.ssh/known_hosts
+          echo "${{ secrets.ssh_known_hosts }}" >> ~/.ssh/known_hosts
           # Добавление закрытого ключа SSH в файл id_rsa
-          echo "${{ secrets.generate_ssh_private_key }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.ssh_private_key }}" > ~/.ssh/id_rsa
           # Изменение прав доступа к файлу id_rsa
           chmod 600 ~/.ssh/id_rsa
           # Выполнение команды для перезагрузки службы systemd на удаленном сервере
