@@ -5,7 +5,7 @@ name: Run tests and deploy "bot-fußball"
 on:
   push:
     paths:
-      - 'generate/bot-fußball.py'
+      - 'fußball/bot-fußball.py'
 
 # Определяем задачи (jobs), которые будут выполняться в рамках workflow
 jobs:
