@@ -1,5 +1,5 @@
 # Название нашего workflow
-name: bot-generate
+name: Run tests and deploy "bot-generate"
 
 # Условия запуска workflow - в нашем случае при каждом пуше в репозиторий
 on:
@@ -9,8 +9,8 @@ on:
 
 # Определяем задачи (jobs), которые будут выполняться в рамках workflow
 jobs:
-  # Задача с именем "bot-generate"
-  bot-generate:
+  # Задача с именем "test"
+  test:
     # Запускаем задачу на виртуальной машине с Ubuntu
     runs-on: ubuntu-latest
 
@@ -36,7 +36,17 @@ jobs:
         env:
           generate_bot: ${{ secrets.generate_bot }}
 
-      # Шаг 5: Копируем файл на удаленный сервер с помощью scp
+# Задача с именем "deploy"
+  deploy:
+    # Запускаем задачу на виртуальной машине с Ubuntu
+    runs-on: ubuntu-latest
+
+    # Задаем зависимость от задачи "test"
+    needs: test
+
+    # Определяем шаги (steps) для выполнения задачи
+    steps:
+      # Шаг 1: Копируем файл на удаленный сервер с помощью scp
       - name: Copy file to remote server
         run: |
           mkdir -p ~/.ssh
