@@ -28,7 +28,7 @@ jobs:
 
       # Шаг 3: Устанавливаем зависимости (в нашем случае фреймворк для тестирования pytest и telebot)
       - name: Install dependencies
-        run: pip install pytest python-telegram-bot requests
+        run: pip install pytest python-telegram-bot requests pytz
 
       # Шаг 4: Запускаем юнит-тесты с помощью pytest
       - name: Run tests
@@ -37,10 +37,8 @@ jobs:
           weather_TOKEN: ${{ secrets.weather_TOKEN }}
           weather_API_KEY: ${{ secrets.weather_CITY_ID }}
           weather_TIMEZONE: ${{ secrets.weather_TIMEZONE }}
-
           weather_CITY_1_LAT: ${{ secrets.weather_CITY_1_LAT }}
           weather_CITY_1_LON: ${{ secrets.weather_CITY_1_LON }}
-
           weather_CITY_2_LAT: ${{ secrets.weather_CITY_2_LAT }}
           weather_CITY_2_LON: ${{ secrets.weather_CITY_2_LON }}
 
