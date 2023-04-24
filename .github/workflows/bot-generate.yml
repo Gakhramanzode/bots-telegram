@@ -1,5 +1,5 @@
 # Название нашего workflow
-name: Run unit tests
+name: bot-generate
 
 # Условия запуска workflow - в нашем случае при каждом пуше в репозиторий
 on:
@@ -9,8 +9,8 @@ on:
 
 # Определяем задачи (jobs), которые будут выполняться в рамках workflow
 jobs:
-  # Задача с именем "test"
-  test:
+  # Задача с именем "bot-generate"
+  bot-generate:
     # Запускаем задачу на виртуальной машине с Ubuntu
     runs-on: ubuntu-latest
 
@@ -35,3 +35,11 @@ jobs:
         run: python generate/bot-generate.py
         env:
           generate_bot: ${{ secrets.generate_bot }}
+
+      # Шаг 5: Копируем файл на удаленный сервер с помощью scp
+      - name: Copy file to remote server
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.generate_ssh_private_key }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          scp generate/bot-generate.py ${{ secrets.username }}@${{ secrets.remote_host }}:${{ secrets.generate_path_to_destination }}
