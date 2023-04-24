@@ -1,6 +1,6 @@
-# Football Bot
+# Fußball Bot
 
-Football Bot - это бот для Telegram, который помогает вам отслеживать расписание футбольных матчей.
+Fußball Bot - это бот для Telegram, который помогает вам отслеживать расписание футбольных матчей.
 
 ## API
 
@@ -21,7 +21,7 @@ Football Bot - это бот для Telegram, который помогает в
 
 ## Установка
 
-Для запуска Football Bot на CentOS 7 вам потребуются следующие библиотеки:
+Для запуска Fußball Bot на CentOS 7 вам потребуются следующие библиотеки:
 
 - Python 3
 - python-telegram-bot
@@ -38,9 +38,9 @@ sudo pip3 install python-telegram-bot requests pytz schedule
 
 ## Запуск
 
-Чтобы запустить Football Bot, перейдите в папку с кодом и выполните следующую команду:
+Чтобы запустить Fußball Bot, перейдите в папку с кодом и выполните следующую команду:
 
-`python3 bot-football.py`
+`python3 bot-fußball.py`
 
 ## Использование
 

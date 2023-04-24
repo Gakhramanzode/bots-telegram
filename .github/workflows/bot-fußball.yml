@@ -1,11 +1,11 @@
 # Название нашего workflow
-name: Run tests and deploy "bot-football"
+name: Run tests and deploy "bot-fußball"
 
 # Условия запуска workflow - в нашем случае при каждом пуше в репозиторий
 on:
   push:
     paths:
-      - 'football/bot-football.py'
+      - 'fußball/bot-fußball.py'
 
 # Определяем задачи (jobs), которые будут выполняться в рамках workflow
 jobs:
@@ -32,7 +32,7 @@ jobs:
 
       # Шаг 4: Запускаем юнит-тесты с помощью pytest
       - name: Run tests
-        run: python football/bot-football.py
+        run: python fußball/bot-fußball.py
         env:
           footbal_TOKEN: ${{ secrets.footbal_TOKEN }}
           footbal_CHAT_ID: ${{ secrets.footbal_CHAT_ID }}
@@ -42,8 +42,8 @@ jobs:
       - name: Upload file as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: my-artifact-bot-football
-          path: football/bot-football.py
+          name: my-artifact-bot-fußball
+          path: fußball/bot-fußball.py
 
 # Задача с именем "deploy"
   deploy:
@@ -59,7 +59,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-          name: my-artifact-bot-football
+          name: my-artifact-bot-fußball
 
       # Шаг 2: Копируем файл на удаленный сервер с помощью scp
       - name: Copy file to remote server
@@ -73,7 +73,7 @@ jobs:
           # Изменение прав доступа к файлу id_rsa
           chmod 600 ~/.ssh/id_rsa
           # Выполнение команды для отправки python-файла на удаленный сервер
-          scp /home/runner/work/bots-telegram/bots-telegram/bot-football.py ${{ secrets.username }}@${{ secrets.remote_host }}:${{ secrets.path_to_destination }}
+          scp /home/runner/work/bots-telegram/bots-telegram/bot-fußball.py ${{ secrets.username }}@${{ secrets.remote_host }}:${{ secrets.path_to_destination }}
 
   # Задача с именем "reload"
   reload:
@@ -94,4 +94,4 @@ jobs:
           # Изменение прав доступа к файлу id_rsa
           chmod 600 ~/.ssh/id_rsa
           # Выполнение команды для перезагрузки службы systemd на удаленном сервере
-          ssh ${{ secrets.username }}@${{ secrets.remote_host }} 'sudo systemctl restart bot-football.service'
+          ssh ${{ secrets.username }}@${{ secrets.remote_host }} 'sudo systemctl status bot-fu\xc3\x9fball.service'

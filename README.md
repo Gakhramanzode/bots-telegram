@@ -9,7 +9,7 @@
 ## Боты
 
 1. fridge
-2. football
+2. fußball
 3. weather
 4. generate
 
