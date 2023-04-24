@@ -8,9 +8,9 @@ import os
 if os.environ.get('CI'):
     exit(0)
 
-TOKEN = os.environ.get('footbal_TOKEN')
-CHAT_ID = os.environ.get('footbal_CHAT_ID')
-API_TOKEN = os.environ.get('footbal_API_TOKEN')
+TOKEN = os.environ.get('football_TOKEN')
+CHAT_ID = os.environ.get('football_CHAT_ID')
+API_TOKEN = os.environ.get('football_API_TOKEN')
 
 TEAMS = {
     113: "Napoli",
@@ -51,17 +51,17 @@ def job():
     for team_id, team_name in TEAMS.items():
         matches = get_upcoming_matches(team_id)
         if matches:
-            message += f"Upcoming {team_name} matches within the next week:\n" + "\n".join(matches) + "\n\n"
+            message += f"Upcoming **{team_name}** matches within the next week:\n" + "\n".join([f"**{match}**" for match in matches]) + "\n\n"
         else:
-            message += f"No upcoming {team_name} matches within the next week found.\n\n"
+            message += f"No upcoming **{team_name}** matches within the next week found.\n\n"
     send_message(message)
 
 moscow_tz = pytz.timezone("Europe/Moscow")
 moscow_time = datetime.now(moscow_tz)
-moscow_time_20_00 = moscow_tz.localize(datetime.combine(moscow_time, time(20, 30)), is_dst=None)
-utc_time_20_00 = moscow_time_20_00.astimezone(pytz.utc).strftime('%H:%M')
+moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time, time(20, 30)), is_dst=None)
+utc_time_20_30 = moscow_time_20_30.astimezone(pytz.utc).strftime('%H:%M')
 
-schedule.every().monday.at(utc_time_20_00).do(job)
+schedule.every().monday.at(utc_time_20_30).do(job)
 
 while True:
     schedule.run_pending()
