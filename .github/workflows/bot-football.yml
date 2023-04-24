@@ -94,4 +94,4 @@ jobs:
           # Изменение прав доступа к файлу id_rsa
           chmod 600 ~/.ssh/id_rsa
           # Выполнение команды для перезагрузки службы systemd на удаленном сервере
-          ssh ${{ secrets.username }}@${{ secrets.remote_host }} 'sudo systemctl restart bot-fu\xc3\x9fball.service'
+          ssh ${{ secrets.username }}@${{ secrets.remote_host }} 'sudo systemctl restart bot-football.service'
