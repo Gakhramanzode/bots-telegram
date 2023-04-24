@@ -35,6 +35,12 @@ jobs:
         run: python generate/bot-generate.py
         env:
           generate_bot: ${{ secrets.generate_bot }}
+      # Шаг 5: Загружаем файл как артефакт
+      - name: Upload file as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-artifact
+          path: generate/bot-generate.py
 
 # Задача с именем "deploy"
   deploy:
@@ -46,11 +52,18 @@ jobs:
 
     # Определяем шаги (steps) для выполнения задачи
     steps:
-      # Шаг 1: Копируем файл на удаленный сервер с помощью scp
+      # Шаг 1: Загружаем артефакт с нужными файлами
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: my-artifact
+
+    steps:
+      # Шаг 2: Копируем файл на удаленный сервер с помощью scp
       - name: Copy file to remote server
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.generate_ssh_known_hosts }}" >> ~/.ssh/known_hosts
           echo "${{ secrets.generate_ssh_private_key }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          scp generate/bot-generate.py ${{ secrets.username }}@${{ secrets.remote_host }}:${{ secrets.generate_path_to_destination }}
+          scp my-artifact/bot-generate.py ${{ secrets.username }}@${{ secrets.remote_host }}:${{ secrets.generate_path_to_destination }}
