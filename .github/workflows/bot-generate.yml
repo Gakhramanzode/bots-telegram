@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: 3.9
 
-      # Шаг 3: Устанавливаем зависимости (в нашем случае фреймворк для тестирования pytest)
+      # Шаг 3: Устанавливаем зависимости (в нашем случае фреймворк для тестирования pytest и telebot)
       - name: Install dependencies
         run: pip install pytest telebot
 
