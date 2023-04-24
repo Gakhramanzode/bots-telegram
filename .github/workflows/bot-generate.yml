@@ -28,7 +28,7 @@ jobs:
 
       # Шаг 3: Устанавливаем зависимости (в нашем случае фреймворк для тестирования pytest)
       - name: Install dependencies
-        run: pip install pytest
+        run: pip install pytest telebot
 
       # Шаг 4: Запускаем юнит-тесты с помощью pytest
       - name: Run tests
