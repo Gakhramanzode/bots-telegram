@@ -40,7 +40,7 @@ jobs:
       - name: Upload file as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: my-artifact
+          name: my-artifact-bot-generate
           path: generate/bot-generate.py
 
 # Задача с именем "deploy"
@@ -57,7 +57,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-          name: my-artifact
+          name: my-artifact-bot-generate
 
       # Шаг 2: Копируем файл на удаленный сервер с помощью scp
       - name: Copy file to remote server
