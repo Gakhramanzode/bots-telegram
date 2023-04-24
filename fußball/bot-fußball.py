@@ -5,6 +5,9 @@ import schedule
 import time as t
 import os
 
+if os.environ.get('CI'):
+    exit(0)
+
 TOKEN = os.environ.get('footbal_TOKEN')
 CHAT_ID = os.environ.get('footbal_CHAT_ID')
 API_TOKEN = os.environ.get('footbal_API_TOKEN')
