@@ -3,6 +3,9 @@ import string
 import telebot
 import os
 
+if os.environ.get('CI'):
+    exit(0)
+
 bot=telebot.TeleBot(os.environ.get('generate_bot'))
 
 def escape_markdown(text):
