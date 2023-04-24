@@ -4,6 +4,7 @@ import json
 import time
 from datetime import datetime, timedelta
 from pytz import timezone
+import os
 
 if os.environ.get('CI'):
     exit(0)
