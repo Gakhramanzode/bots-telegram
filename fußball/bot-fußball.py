@@ -51,7 +51,7 @@ def job():
     for team_id, team_name in TEAMS.items():
         matches = get_upcoming_matches(team_id)
         if matches:
-            message += f"Upcoming {team_name} matches within the next week:\n" + "\n".join(matches) + "\n\n"
+            message += f"!!!Upcoming {team_name} matches within the next week:\n" + "\n".join(matches) + "\n\n"
         else:
             message += f"No upcoming {team_name} matches within the next week found.\n\n"
     send_message(message)
