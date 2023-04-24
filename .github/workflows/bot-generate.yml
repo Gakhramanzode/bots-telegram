@@ -2,7 +2,10 @@
 name: Run unit tests
 
 # Условия запуска workflow - в нашем случае при каждом пуше в репозиторий
-on: push
+on:
+  push:
+    paths:
+      - 'generate/bot-generate.py'
 
 # Определяем задачи (jobs), которые будут выполняться в рамках workflow
 jobs:
@@ -29,4 +32,6 @@ jobs:
 
       # Шаг 4: Запускаем юнит-тесты с помощью pytest
       - name: Run tests
-        run: pytest
+        run: python3.9 generate/bot-generate.py
+        env:
+          generate_bot: ${{ secrets.generate_bot }}
