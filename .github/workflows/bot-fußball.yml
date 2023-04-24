@@ -32,7 +32,7 @@ jobs:
 
       # Шаг 4: Запускаем юнит-тесты с помощью pytest
       - name: Run tests
-        run: python generate/bot-fußball.py
+        run: python fußball/bot-fußball.py
         env:
           footbal_TOKEN: ${{ secrets.footbal_TOKEN }}
           footbal_CHAT_ID: ${{ secrets.footbal_CHAT_ID }}
