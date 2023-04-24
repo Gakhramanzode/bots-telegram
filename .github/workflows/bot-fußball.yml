@@ -1,0 +1,46 @@
+# Название нашего workflow
+name: Run tests and deploy "bot-fußball"
+
+# Условия запуска workflow - в нашем случае при каждом пуше в репозиторий
+on:
+  push:
+    paths:
+      - 'generate/bot-fußball.py'
+
+# Определяем задачи (jobs), которые будут выполняться в рамках workflow
+jobs:
+  # Задача с именем "test"
+  test:
+    # Запускаем задачу на виртуальной машине с Ubuntu
+    runs-on: ubuntu-latest
+
+    # Определяем шаги (steps) для выполнения задачи
+    steps:
+      # Шаг 1: Получаем код из репозитория
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      # Шаг 2: Устанавливаем нужную версию Python
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3
+
+      # Шаг 3: Устанавливаем зависимости (в нашем случае фреймворк для тестирования pytest и telebot)
+      - name: Install dependencies
+        run: pip install pytest python-telegram-bot requests pytz schedule
+
+      # Шаг 4: Запускаем юнит-тесты с помощью pytest
+      - name: Run tests
+        run: python generate/bot-fußball.py
+        env:
+          footbal_TOKEN: ${{ secrets.footbal_TOKEN }}
+          footbal_CHAT_ID: ${{ secrets.footbal_CHAT_ID }}
+          footbal_API_TOKEN: ${{ secrets.footbal_API_TOKEN }}
+
+      # Шаг 5: Загружаем файл как артефакт
+      - name: Upload file as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-artifact
+          path: generate/bot-generate.py
