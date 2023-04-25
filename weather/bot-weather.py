@@ -6,9 +6,6 @@ from datetime import datetime, timedelta
 from pytz import timezone
 import os
 
-if os.environ.get('CI'):
-    exit(0)
-
 # Задаем константы
 TOKEN = os.environ.get('weather_TOKEN')
 CHAT_ID = os.environ.get('weather_CHAT_ID')
@@ -99,6 +96,9 @@ def check_time_and_send():
         send_message(get_weather())
     elif now.hour == 3 and now.minute == 0:
         send_message(get_weather())
+
+if os.environ.get('CI'):
+    exit(0)
 
 # Основной цикл программы
 while True:

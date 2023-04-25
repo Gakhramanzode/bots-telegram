@@ -3,9 +3,6 @@ import string
 import telebot
 import os
 
-if os.environ.get('CI'):
-    exit(0)
-
 bot=telebot.TeleBot(os.environ.get('generate_bot'))
 
 def escape_markdown(text):
@@ -51,5 +48,8 @@ def generate_port_number(message):
     """
     port = random.randint(49152, 65535)
     bot.send_message(message.chat.id, f'Random port number:\n```\n{port}\n```', parse_mode='MarkdownV2')
+
+if os.environ.get('CI'):
+    exit(0)
 
 bot.polling() # Запуск бота
