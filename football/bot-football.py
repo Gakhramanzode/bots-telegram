@@ -17,8 +17,8 @@ TEAMS = {
     516: "Marseille",
     5: "Bayern München",
     4: "Borussia Dortmund",
-    3239: "AS Roma"
-    # 165: "Bayer 04 Leverkusen"
+    100: "AS Roma",
+    3: "Bayer 04 Leverkusen"
 }
 
 def get_upcoming_matches(team_id):
@@ -52,14 +52,14 @@ def job():
     for team_id, team_name in TEAMS.items():
         matches = get_upcoming_matches(team_id)
         if matches:
-            message += f"Upcoming **{team_name}** matches within the next week:\n" + "\n".join([f"**{match}**" for match in matches]) + "\n\n"
+            message += f"Upcoming *{team_name}* matches within the next week:\n" + "\n".join([f"**{match}**" for match in matches]) + "\n\n"
         else:
             message += f"No upcoming **{team_name}** matches within the next week found.\n\n"
     send_message(message)
 
 moscow_tz = pytz.timezone("Europe/Moscow")
 moscow_time = datetime.now(moscow_tz)
-moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time.date(), time(15, 24)), is_dst=None)
+moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time.date(), time(15, 44)), is_dst=None)
 utc_time_20_30 = moscow_time_20_30.astimezone(pytz.utc).strftime('%H:%M')
 
 schedule.every().tuesday.at(utc_time_20_30).do(job)
