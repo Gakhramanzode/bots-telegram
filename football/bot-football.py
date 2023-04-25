@@ -60,10 +60,10 @@ def job():
 
 moscow_tz = pytz.timezone("Europe/Moscow")
 moscow_time = datetime.now(moscow_tz)
-moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time, time(20, 30)), is_dst=None)
+moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time, time(14, 29)), is_dst=None)
 utc_time_20_30 = moscow_time_20_30.astimezone(pytz.utc).strftime('%H:%M')
 
-schedule.every().monday.at(utc_time_20_30).do(job)
+schedule.every().thuesday.at(utc_time_20_30).do(job)
 
 while True:
     schedule.run_pending()
