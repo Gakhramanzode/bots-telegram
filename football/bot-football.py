@@ -5,8 +5,8 @@ import schedule
 import time as t
 import os
 
-if os.environ.get('CI'):
-    exit(0)
+# if os.environ.get('CI'):
+#     exit(0)
 
 TOKEN = os.environ.get('football_TOKEN')
 CHAT_ID = os.environ.get('football_CHAT_ID')
@@ -64,6 +64,9 @@ moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time, time(14, 29
 utc_time_20_30 = moscow_time_20_30.astimezone(pytz.utc).strftime('%H:%M')
 
 schedule.every().thuesday.at(utc_time_20_30).do(job)
+
+if os.environ.get('CI'):
+    exit(0)
 
 while True:
     schedule.run_pending()
