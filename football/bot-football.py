@@ -30,9 +30,11 @@ def get_upcoming_matches(team_id):
     now = datetime.utcnow()
     week_from_now = now + timedelta(days=7)
     moscow_tz = pytz.timezone("Europe/Moscow")
+    print(data)
     for match in data["matches"]:
         utc_date = datetime.strptime(match["utcDate"], "%Y-%m-%dT%H:%M:%SZ")
         if utc_date > now and utc_date < week_from_now:
+            print(data)
             moscow_date = utc_date.replace(tzinfo=pytz.utc).astimezone(moscow_tz)
             date = moscow_date.strftime("%d %B %Y %H:%M")
             home_team = match["homeTeam"]["name"]
@@ -57,7 +59,7 @@ def job():
 
 moscow_tz = pytz.timezone("Europe/Moscow")
 moscow_time = datetime.now(moscow_tz)
-moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time.date(), time(15, 1)), is_dst=None)
+moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time.date(), time(15, 7)), is_dst=None)
 utc_time_20_30 = moscow_time_20_30.astimezone(pytz.utc).strftime('%H:%M')
 
 schedule.every().tuesday.at(utc_time_20_30).do(job)
