@@ -40,7 +40,7 @@ def get_upcoming_matches(team_id):
             date = moscow_date.strftime("%d %B %Y %H:%M")
             home_team = match["homeTeam"]["name"]
             away_team = match["awayTeam"]["name"]
-            matches.append(f"*{home_team}* vs *{away_team}* on *{date}* (Moscow time)")
+            matches.append(f"*{home_team}* 🆚 *{away_team}* on *{date}* (Moscow time)")
     return matches
 
 def send_message(text):
@@ -48,13 +48,15 @@ def send_message(text):
     data = {"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"}
     requests.post(url, data=data)
 
-def create_ics_file(match, date):
+def create_ics_file(matches):
     cal = Calendar()
-    event = Event()
-    event.name = match
-    event.begin = date
-    cal.events.add(event)
-    file_path = f"{match}.ics"
+    for match in matches:
+        event = Event()
+        event.name = match
+        match_date_str = match.split(" on ")[-1].replace("*", "")
+        event.begin = datetime.strptime(match_date_str, "%d %B %Y %H:%M (Moscow time)").strftime("%Y-%m-%d %H:%M:%S")
+        cal.events.add(event)
+    file_path = f"matches.ics"
     with open(file_path, 'w') as f:
         f.writelines(cal)
     return file_path
@@ -67,23 +69,23 @@ def send_ics_file(file_path):
 
 def job():
     message = ""
+    all_matches = []
     for team_id, team_name in TEAMS.items():
         matches = get_upcoming_matches(team_id)
         if matches:
             message += f"Upcoming *{team_name}* matches within the next week:\n" + "\n".join([f"**{match}**" for match in matches]) + "\n\n"
-            for match in matches:
-                match_date_str = match.split(" on ")[-1].replace("*", "")
-                match_date = datetime.strptime(match_date_str, "%d %B %Y %H:%M (Moscow time)").strftime("%Y-%m-%d %H:%M:%S")
-                file_path = create_ics_file(match, match_date)
-                send_ics_file(file_path)
+            all_matches.extend(matches)
         else:
             message += f"No upcoming **{team_name}** matches within the next week found.\n\n"
+    if all_matches:
+        file_path = create_ics_file(all_matches)
+        send_ics_file(file_path)
     send_message(message)
 
 
 moscow_tz = pytz.timezone("Europe/Moscow")
 moscow_time = datetime.now(moscow_tz)
-moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time.date(), time(13, 13)), is_dst=None)
+moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time.date(), time(13, 26)), is_dst=None)
 utc_time_20_30 = moscow_time_20_30.astimezone(pytz.utc).strftime('%H:%M')
 
 schedule.every().friday.at(utc_time_20_30).do(job)
