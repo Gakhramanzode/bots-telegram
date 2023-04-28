@@ -45,3 +45,7 @@ sudo pip3 install python-telegram-bot requests pytz schedule
 ## Использование
 
 После запуска бота вы можете использовать его для отслеживания расписания футбольных матчей.
+<p align="center">
+  <img src="football\img\Снимок экрана 2023-04-28 172442.png" alt="bot-football img">
+  <figcaption>Скриншот работы бота</figcaption>
+</p>
