@@ -57,7 +57,8 @@ def create_ics_file(matches):
         event.begin = datetime.strptime(match_date_str, "%d %B %Y %H:%M (Moscow time)").strftime("%Y-%m-%d %H:%M:%S")
         event.duration = timedelta(hours=2)
         cal.events.add(event)
-    file_path = f"matches.ics"
+    current_date = datetime.now().strftime("%d-%m-%Y")
+    file_path = f"matches_{current_date}.ics"
     with open(file_path, 'w') as f:
         f.writelines(cal)
     return file_path
@@ -86,7 +87,7 @@ def job():
 
 moscow_tz = pytz.timezone("Europe/Moscow")
 moscow_time = datetime.now(moscow_tz)
-moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time.date(), time(16, 11)), is_dst=None)
+moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time.date(), time(16, 31)), is_dst=None)
 utc_time_20_30 = moscow_time_20_30.astimezone(pytz.utc).strftime('%H:%M')
 
 schedule.every().friday.at(utc_time_20_30).do(job)
