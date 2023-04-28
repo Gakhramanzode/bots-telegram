@@ -1,4 +1,4 @@
-# :robot::speech_balloon: Bots-Telegram
+# :robot::speech_balloon: roBots-Telegram
 
 Этот репозиторий содержит код для разных ботов в Telegram.
 
@@ -8,10 +8,10 @@
 
 ## Боты
 
-1. [:baguette_bread: fridge](fridge\README.md)
-2. [:soccer: football](football\README.md)
-3. [:sun_behind_rain_cloud: weather](weather\README.md)
-4. [:twisted_rightwards_arrows: generate](generate\README.md)
+1. :baguette_bread: [fridge](fridge\README.md)
+2. :soccer: [football](football\README.md)
+3. :sun_behind_rain_cloud: [weather](weather\README.md)
+4. :twisted_rightwards_arrows: [generate](generate\README.md)
 
 ## Использование
 
