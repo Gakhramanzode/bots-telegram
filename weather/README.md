@@ -1,4 +1,4 @@
-# Weather Bot
+# :sun_behind_rain_cloud: Weather Bot
 
 Weather Bot - это бот для Telegram, который помогает вам узнавать прогноз погоды.
 

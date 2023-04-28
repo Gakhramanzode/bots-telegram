@@ -1,4 +1,4 @@
-# Generate Bot
+# :twisted_rightwards_arrows: Generate Bot
 
 Generate Bot - это бот генерирует случайный никнейм, сложный пароль из 18 символов, номер логического порта для TCP/UDP. [Ссылка](https://t.me/generate_asker_bot) на пример бота.
 
