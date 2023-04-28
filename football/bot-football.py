@@ -86,12 +86,11 @@ def job():
             message += f"Upcoming *{team_name}* matches within the next week:\n" + "\n".join([f"**{match}**" for match in matches]) + "\n\n"
             all_matches.extend(matches)
         else:
-            message += f"No upcoming **{team_name}** matches within the next week found.\n\n"
+            message += f"No upcoming *{team_name}* matches within the next week found.\n\n"
+    send_message(message)
     if all_matches:
         file_path = create_ics_file(all_matches)
         send_ics_file(file_path)
-    send_message(message)
-
 
 moscow_tz = pytz.timezone("Europe/Moscow")
 moscow_time = datetime.now(moscow_tz)
