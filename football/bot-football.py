@@ -72,16 +72,18 @@ def job():
         if matches:
             message += f"Upcoming *{team_name}* matches within the next week:\n" + "\n".join([f"**{match}**" for match in matches]) + "\n\n"
             for match in matches:
-                match_date = datetime.strptime(match.split(" on ")[-1], "%d %B %Y %H:%M (Moscow time)").strftime("%Y-%m-%d %H:%M:%S")
+                match_date_str = match.split(" on ")[-1].replace("*", "")
+                match_date = datetime.strptime(match_date_str, "%d %B %Y %H:%M (Moscow time)").strftime("%Y-%m-%d %H:%M:%S")
                 file_path = create_ics_file(match, match_date)
                 send_ics_file(file_path)
         else:
             message += f"No upcoming **{team_name}** matches within the next week found.\n\n"
     send_message(message)
 
+
 moscow_tz = pytz.timezone("Europe/Moscow")
 moscow_time = datetime.now(moscow_tz)
-moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time.date(), time(13, 3)), is_dst=None)
+moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time.date(), time(13, 13)), is_dst=None)
 utc_time_20_30 = moscow_time_20_30.astimezone(pytz.utc).strftime('%H:%M')
 
 schedule.every().friday.at(utc_time_20_30).do(job)
