@@ -19,16 +19,7 @@ TEAMS = {
     65: "Manchester City",
     61: "Chelsea",
     64: "Liverpool",
-
-    # 113: "Napoli",
-    # 64: "Liverpool",
-    # 61: "Chelsea",
-    # 65: "Manchester City",
     516: "Marseille"
-    # 5: "Bayern München",
-    # 4: "Borussia Dortmund",
-    # 100: "AS Roma",
-    # 3: "Bayer 04 Leverkusen"
 }
 
 def get_upcoming_matches(team_id):
@@ -91,10 +82,11 @@ def job():
     if all_matches:
         file_path = create_ics_file(all_matches)
         send_ics_file(file_path)
+        os.remove(file_path)
 
 moscow_tz = pytz.timezone("Europe/Moscow")
 moscow_time = datetime.now(moscow_tz)
-moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time.date(), time(15, 57)), is_dst=None)
+moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time.date(), time(16, 11)), is_dst=None)
 utc_time_20_30 = moscow_time_20_30.astimezone(pytz.utc).strftime('%H:%M')
 
 schedule.every().friday.at(utc_time_20_30).do(job)
