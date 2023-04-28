@@ -11,15 +11,24 @@ CHAT_ID = os.environ.get('football_CHAT_ID')
 API_TOKEN = os.environ.get('football_API_TOKEN')
 
 TEAMS = {
-    113: "Napoli",
-    64: "Liverpool",
-    61: "Chelsea",
-    65: "Manchester City",
-    516: "Marseille",
     5: "Bayern München",
+    3: "Bayer 04 Leverkusen",
     4: "Borussia Dortmund",
+    113: "Napoli",
     100: "AS Roma",
-    3: "Bayer 04 Leverkusen"
+    65: "Manchester City",
+    61: "Chelsea",
+    64: "Liverpool",
+
+    # 113: "Napoli",
+    # 64: "Liverpool",
+    # 61: "Chelsea",
+    # 65: "Manchester City",
+    516: "Marseille"
+    # 5: "Bayern München",
+    # 4: "Borussia Dortmund",
+    # 100: "AS Roma",
+    # 3: "Bayer 04 Leverkusen"
 }
 
 def get_upcoming_matches(team_id):
@@ -55,6 +64,7 @@ def create_ics_file(matches):
         event.name = match
         match_date_str = match.split(" on ")[-1].replace("*", "")
         event.begin = datetime.strptime(match_date_str, "%d %B %Y %H:%M (Moscow time)").strftime("%Y-%m-%d %H:%M:%S")
+        event.duration = timedelta(hours=2)
         cal.events.add(event)
     file_path = f"matches.ics"
     with open(file_path, 'w') as f:
@@ -85,7 +95,7 @@ def job():
 
 moscow_tz = pytz.timezone("Europe/Moscow")
 moscow_time = datetime.now(moscow_tz)
-moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time.date(), time(13, 26)), is_dst=None)
+moscow_time_20_30 = moscow_tz.localize(datetime.combine(moscow_time.date(), time(13, 39)), is_dst=None)
 utc_time_20_30 = moscow_time_20_30.astimezone(pytz.utc).strftime('%H:%M')
 
 schedule.every().friday.at(utc_time_20_30).do(job)
