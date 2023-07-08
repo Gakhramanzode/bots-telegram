@@ -4,7 +4,7 @@ import telebot
 import os
 
 bot=telebot.TeleBot(os.environ.get('generate_bot'))
-
+ 
 def escape_markdown(text):
     """
     Функция для экранирования специальных символов в тексте для форматирования MarkdownV2.
