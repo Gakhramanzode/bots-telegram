@@ -71,7 +71,7 @@ jobs:
           # Изменение прав доступа к файлу id_rsa
           chmod 600 ~/.ssh/id_rsa
           # Выполнение команды для отправки python-файла на удаленный сервер
-          scp /home/runner/work/bots-telegram/bots-telegram/bot-generate.py ${{ secrets.username }}@${{ secrets.remote_host }}:${{ secrets.path_to_destination }}
+          scp /home/runner/work/bots-telegram/bots-telegram/bot-generate.py ${{ secrets.username }}@${{ secrets.remote_host }}:${{ secrets.path_to_destination }}/bot-generate.py
 
   # Задача с именем "reload"
   reload:
