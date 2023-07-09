@@ -5,7 +5,7 @@ import time
 from datetime import datetime, timedelta
 from pytz import timezone
 import os
- 
+
 # Задаем константы
 TOKEN = os.environ.get('weather_TOKEN')
 CHAT_ID = os.environ.get('weather_CHAT_ID')
