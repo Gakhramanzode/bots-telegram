@@ -3,7 +3,7 @@ from telebot import types
 import mysql.connector
 import datetime
 import os
-
+ 
 users = {} # объявляем пустой словарь в глобальной области видимости
 
 # Подключение к базе данных MySQL
