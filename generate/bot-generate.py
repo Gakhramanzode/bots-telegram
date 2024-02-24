@@ -2,30 +2,35 @@ import random
 import string
 import telebot
 import os
-from prometheus_client import start_http_server, Counter
+from prometheus_client import start_http_server, Counter, Gauge
 
 bot=telebot.TeleBot(os.environ.get('generate_bot'))
 
 REQUESTS_START = Counter('bot_generate_start_total',
-                        'Bot generate start requested.')
+                         'Bot generate start requested.')
 
 REQUESTS_GENERATE_NICKNAME = Counter('bot_generate_nickname_total',
-                        'Bot generate nickname requested.')
+                                     'Bot generate nickname requested.')
 
 REQUESTS_GENERATE_PASSWORD = Counter('bot_generate_password_total',
-                        'Bot generate password requested.')
+                                     'Bot generate password requested.')
 
 REQUESTS_GENERATE_PORT_NUMBER = Counter('bot_generate_port_number_total',
-                        'Bot generate port number requested.')
+                                        'Bot generate port number requested.')
 
 REQUESTS_GENERATE_PIN = Counter('bot_generate_pin',
-                        'Bot generate pin requested.')
+                                'Bot generate pin requested.')
+
+LAST = Gauge('bot_generate_last_time_seconds',
+             'The last time a bot generate was served.')
 
 def escape_markdown(text):
     """
     Функция для экранирования специальных символов в тексте для форматирования MarkdownV2.
     """
     escape_chars = r'_*[]()~`>#+-=|{}.!' # Список символов, которые необходимо экранировать
+    LAST.set(time.time())
+    INPROGRESS.dec()    
     return ''.join('\\' + char if char in escape_chars else char for char in text)
 
 @bot.message_handler(commands=['start'])
