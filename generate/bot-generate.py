@@ -24,12 +24,16 @@ REQUESTS_GENERATE_PIN = Counter('bot_generate_pin',
 LAST = Gauge('bot_generate_last_time_seconds',
              'The last time a bot generate was served.')
 
+LATENCY = Summary('bot_generate_latency_second',
+                  'Time for a request bot generate.')
+
 def escape_markdown(text):
     """
     Функция для экранирования специальных символов в тексте для форматирования MarkdownV2.
     """
     escape_chars = r'_*[]()~`>#+-=|{}.!' # Список символов, которые необходимо экранировать
     LAST.set_to_current_time()
+    LATENCY.observe(time.time() - start)
     return ''.join('\\' + char if char in escape_chars else char for char in text)
 
 @bot.message_handler(commands=['start'])
