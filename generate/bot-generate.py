@@ -29,8 +29,7 @@ def escape_markdown(text):
     Функция для экранирования специальных символов в тексте для форматирования MarkdownV2.
     """
     escape_chars = r'_*[]()~`>#+-=|{}.!' # Список символов, которые необходимо экранировать
-    LAST.set(time.time())
-    INPROGRESS.dec()    
+    LAST.set_to_current_time()
     return ''.join('\\' + char if char in escape_chars else char for char in text)
 
 @bot.message_handler(commands=['start'])
