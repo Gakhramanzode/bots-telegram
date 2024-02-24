@@ -2,6 +2,7 @@ import random
 import string
 import telebot
 import os
+import http.server
 import prometheus_client
 
 bot=telebot.TeleBot(os.environ.get('generate_bot'))
@@ -61,4 +62,6 @@ def generate_pin(message):
 if os.environ.get('CI'):
     exit(0)
 
-bot.polling() # Запуск бота
+if __name__ == "__main__":
+    start_http_server(8000)
+    bot.polling() # Запуск бота
