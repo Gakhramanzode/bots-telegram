@@ -7,19 +7,24 @@ from prometheus_client import start_http_server, Counter, Gauge, Summary
 bot=telebot.TeleBot(os.environ.get('generate_bot'))
 
 REQUESTS_START = Counter('bot_generate_start_total',
-                         'Bot generate start requested.')
+                         'Bot generate start requested.',
+                         labelnames=['path'])
 
 REQUESTS_GENERATE_NICKNAME = Counter('bot_generate_nickname_total',
-                                     'Bot generate nickname requested.')
+                                     'Bot generate nickname requested.',
+                                     labelnames=['path'])
 
 REQUESTS_GENERATE_PASSWORD = Counter('bot_generate_password_total',
-                                     'Bot generate password requested.')
+                                     'Bot generate password requested.',
+                                     labelnames=['path'])
 
 REQUESTS_GENERATE_PORT_NUMBER = Counter('bot_generate_port_number_total',
-                                        'Bot generate port number requested.')
+                                        'Bot generate port number requested.',
+                                        labelnames=['path'])
 
 REQUESTS_GENERATE_PIN = Counter('bot_generate_pin',
-                                'Bot generate pin requested.')
+                                'Bot generate pin requested.',
+                                labelnames=['path'])
 
 LAST = Gauge('bot_generate_last_time_seconds',
              'The last time a bot generate was served.')
@@ -33,8 +38,8 @@ def escape_markdown(text):
     return ''.join('\\' + char if char in escape_chars else char for char in text)
 
 @bot.message_handler(commands=['start'])
-def start(message):
-    REQUESTS_START.inc()
+def start(message, self):
+    REQUESTS_START.labels(self.path).inc()
     """
     Обработчик команды /start. Отправляет пользователю приветственное сообщение и информацию о боте.
     """
