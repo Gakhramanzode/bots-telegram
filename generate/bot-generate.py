@@ -2,7 +2,7 @@ import random
 import string
 import telebot
 import os
-from prometheus_client import start_http_server, Counter, Gauge
+from prometheus_client import start_http_server, Counter, Gauge, Summary
 
 bot=telebot.TeleBot(os.environ.get('generate_bot'))
 
