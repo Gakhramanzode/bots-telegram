@@ -55,7 +55,7 @@ def generate_pin(message):
     Обработчик команды /generate_pin. Генерирует случайный 4-значный пин-код.
     """
     pin = ''.join(random.choice(string.digits) for _ in range(4))
-    bot.send_message(message.chat.id, f'Random pin number:\n```\n{pin}\n```', parse_mode='MarkdownV2')
+    bot.send_message(message.chat.id, f'1 Random pin number:\n```\n{pin}\n```', parse_mode='MarkdownV2')
 
 if os.environ.get('CI'):
     exit(0)
