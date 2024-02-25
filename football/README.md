@@ -1,3 +1,5 @@
+[![Run tests and deploy "bot-football"](https://github.com/Gakhramanzode/bots-telegram/actions/workflows/bot-football.yml/badge.svg)](https://github.com/Gakhramanzode/bots-telegram/actions/workflows/bot-football.yml)
+
 # :soccer: Football Bot
 
 Football Bot - это бот для Telegram, который помогает вам отслеживать расписание футбольных матчей. Также бот отправляет `.ics` файл под своим текстовым сообщением, который позволяет добавлять в календарь событие о матче, чтобы не забыть посмотреть игру.
