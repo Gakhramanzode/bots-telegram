@@ -14,6 +14,7 @@ REQUESTS_COMMANDS = Counter('bot_football_commands',
 LAST = Gauge('bot_football_last_time_seconds',
              'The last time a bot football was served.')
 
+
 TOKEN = os.environ.get('football_TOKEN')
 CHAT_ID = os.environ.get('football_CHAT_ID')
 API_TOKEN = os.environ.get('football_API_TOKEN')
