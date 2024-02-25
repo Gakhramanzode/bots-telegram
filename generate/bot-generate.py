@@ -90,4 +90,3 @@ if __name__ == "__main__":
     logging.info('Start http server')
     logging.info('Start bot polling')
     bot.polling() # Запуск бота
-    logging.info('Stop bot polling')
