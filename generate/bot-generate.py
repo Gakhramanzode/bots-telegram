@@ -3,6 +3,10 @@ import string
 import telebot
 import os
 from prometheus_client import start_http_server, Counter, Gauge
+import logging
+
+logging.basicConfig(level=logging.INFO, filename='app.log', filemode='w',
+                    format='%(name)s - %(levelname)s - %(message)s')
 
 bot=telebot.TeleBot(os.environ.get('generate_bot'))
 
@@ -76,4 +80,6 @@ if os.environ.get('CI'):
 
 if __name__ == "__main__":
     start_http_server(62865)
+    logging.info('Start http server')
+    logging.info('Start bot polling')
     bot.polling() # Запуск бота
