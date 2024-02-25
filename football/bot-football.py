@@ -5,14 +5,6 @@ import schedule
 import time as t
 import os
 from ics import Calendar, Event
-from prometheus_client import start_http_server, Counter, Gauge
-
-REQUESTS_COMMANDS = Counter('bot_football_commands',
-                         'Bot football commands requested.',
-                         labelnames=['command'])
-
-LAST = Gauge('bot_football_last_time_seconds',
-             'The last time a bot football was served.')
 
 TOKEN = os.environ.get('football_TOKEN')
 CHAT_ID = os.environ.get('football_CHAT_ID')
@@ -52,8 +44,6 @@ def get_upcoming_matches(team_id):
     return matches
 
 def send_message(text):
-    REQUESTS_COMMANDS.labels('send_message').inc()
-    LAST.set_to_current_time()
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     data = {"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"}
     requests.post(url, data=data)
@@ -105,8 +95,6 @@ schedule.every().monday.at(utc_time_19_30).do(job)
 if os.environ.get('CI'):
     exit(0)
 
-if __name__ == "__main__":
-    start_http_server(59725)
-    while True:
-        schedule.run_pending()
-        t.sleep(1)
+while True:
+    schedule.run_pending()
+    t.sleep(1)

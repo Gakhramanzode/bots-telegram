@@ -5,6 +5,14 @@ import time
 from datetime import datetime, timedelta
 from pytz import timezone
 import os
+from prometheus_client import start_http_server, Counter, Gauge
+
+REQUESTS_COMMANDS = Counter('bot_football_commands',
+                         'Bot football commands requested.',
+                         labelnames=['command'])
+
+LAST = Gauge('bot_football_last_time_seconds',
+             'The last time a bot football was served.')
 
 # Задаем константы
 TOKEN = os.environ.get('weather_TOKEN')
@@ -102,5 +110,6 @@ if os.environ.get('CI'):
 
 # Основной цикл программы
 while True:
+    start_http_server(57899)
     check_time_and_send()
     time.sleep(60) # Пауза в 60 секунд
