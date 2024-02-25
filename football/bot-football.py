@@ -106,5 +106,6 @@ if os.environ.get('CI'):
     exit(0)
 
 while True:
+    start_http_server(59725)
     schedule.run_pending()
     t.sleep(1)
