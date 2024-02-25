@@ -6,6 +6,10 @@ from prometheus_client import start_http_server, Counter, Gauge
 
 bot=telebot.TeleBot(os.environ.get('generate_bot'))
 
+REQUESTS_COMMANDS = Counter('bot_generate_commands',
+                         'Bot generate commands requested.',
+                         labelnames=['path'])
+
 REQUESTS_START = Counter('bot_generate_start_total',
                          'Bot generate start requested.')
 
@@ -34,7 +38,8 @@ def escape_markdown(text):
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    REQUESTS_START.inc()
+    # REQUESTS_START.inc()
+    REQUESTS_COMMANDS.labels('start').inc()
     """
     Обработчик команды /start. Отправляет пользователю приветственное сообщение и информацию о боте.
     """
