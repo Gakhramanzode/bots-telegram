@@ -14,7 +14,6 @@ REQUESTS_COMMANDS = Counter('bot_football_commands',
 LAST = Gauge('bot_football_last_time_seconds',
              'The last time a bot football was served.')
 
-
 TOKEN = os.environ.get('football_TOKEN')
 CHAT_ID = os.environ.get('football_CHAT_ID')
 API_TOKEN = os.environ.get('football_API_TOKEN')
@@ -107,6 +106,7 @@ if os.environ.get('CI'):
     exit(0)
 
 while True:
-    start_http_server(59725)
     schedule.run_pending()
     t.sleep(1)
+
+start_http_server(59725)
