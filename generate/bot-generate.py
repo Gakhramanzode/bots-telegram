@@ -8,7 +8,7 @@ bot=telebot.TeleBot(os.environ.get('generate_bot'))
 
 REQUESTS_COMMANDS = Counter('bot_generate_commands',
                          'Bot generate commands requested.',
-                         labelnames=['path'])
+                         labelnames=['command'])
 
 LAST = Gauge('bot_generate_last_time_seconds',
              'The last time a bot generate was served.')
