@@ -5,6 +5,7 @@ import schedule
 import time as t
 import os
 from ics import Calendar, Event
+from prometheus_client import start_http_server, Counter, Gauge
 
 TOKEN = os.environ.get('football_TOKEN')
 CHAT_ID = os.environ.get('football_CHAT_ID')
@@ -96,5 +97,6 @@ if os.environ.get('CI'):
     exit(0)
 
 while True:
+    start_http_server(62865)
     schedule.run_pending()
     t.sleep(1)
