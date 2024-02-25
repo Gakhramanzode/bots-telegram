@@ -5,7 +5,7 @@ import os
 from prometheus_client import start_http_server, Counter, Gauge
 import logging
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 bot=telebot.TeleBot(os.environ.get('generate_bot'))
@@ -22,13 +22,14 @@ def escape_markdown(text):
     Функция для экранирования специальных символов в тексте для форматирования MarkdownV2.
     """
     escape_chars = r'_*[]()~`>#+-=|{}.!' # Список символов, которые необходимо экранировать
-    logger.info('def escape_markdown. Escaping markdown for text: %s', text)
+    logger.info('def escape_markdown')
     LAST.set_to_current_time()
     return ''.join('\\' + char if char in escape_chars else char for char in text)
 
 @bot.message_handler(commands=['start'])
 def start(message):
     REQUESTS_COMMANDS.labels('start').inc()
+    logger.info('Commands start')
     """
     Обработчик команды /start. Отправляет пользователю приветственное сообщение и информацию о боте.
     """
@@ -37,6 +38,7 @@ def start(message):
 @bot.message_handler(commands=['generate_nickname'])
 def generate_nickname(message):
     REQUESTS_COMMANDS.labels('generate_nickname').inc()
+    logger.info('Commands generate_nickname')
     """
     Обработчик команды /generate_nickname. Генерирует случайное имя и отправляет его пользователю.
     """
@@ -45,12 +47,12 @@ def generate_nickname(message):
     adjective = random.choice(adjectives)
     animal = random.choice(animals)
     nickname = f'{adjective}_{animal}'
-    logger.info('def generate_nickname. Escaping markdown for text: %s', nickname)
     bot.send_message(message.chat.id, f'Your nickname:\n```\n{nickname}\n```', parse_mode='MarkdownV2')
 
 @bot.message_handler(commands=['generate_password'])
 def generate_password(message):
     REQUESTS_COMMANDS.labels('generate_password').inc()
+    logger.info('Commands generate_password')
     """
     Обработчик команды /generate_password. Генерирует случайный пароль из 18 символов и отправляет его пользователю.
     """
@@ -62,6 +64,7 @@ def generate_password(message):
 @bot.message_handler(commands=['generate_port_number'])
 def generate_port_number(message):
     REQUESTS_COMMANDS.labels('generate_port_number').inc()
+    logger.info('Commands generate_port_number')
     """
     Обработчик команды /generate_port_number. Генерирует случайный пароль логический порт для TCP/UPD.
     """
@@ -71,6 +74,7 @@ def generate_port_number(message):
 @bot.message_handler(commands=['generate_pin'])
 def generate_pin(message):
     REQUESTS_COMMANDS.labels('generate_pin').inc()
+    logger.info('Commands generate_pin')
     """
     Обработчик команды /generate_pin. Генерирует случайный 4-значный пин-код.
     """
@@ -78,6 +82,7 @@ def generate_pin(message):
     bot.send_message(message.chat.id, f'Random pin number:\n```\n{pin}\n```', parse_mode='MarkdownV2')
 
 if os.environ.get('CI'):
+    logger.info('Commands CI')
     exit(0)
 
 if __name__ == "__main__":
@@ -85,3 +90,4 @@ if __name__ == "__main__":
     logging.info('Start http server')
     logging.info('Start bot polling')
     bot.polling() # Запуск бота
+    logging.info('Stop bot polling')
