@@ -10,21 +10,6 @@ REQUESTS_COMMANDS = Counter('bot_generate_commands',
                          'Bot generate commands requested.',
                          labelnames=['path'])
 
-REQUESTS_START = Counter('bot_generate_start_total',
-                         'Bot generate start requested.')
-
-REQUESTS_GENERATE_NICKNAME = Counter('bot_generate_nickname_total',
-                                     'Bot generate nickname requested.')
-
-REQUESTS_GENERATE_PASSWORD = Counter('bot_generate_password_total',
-                                     'Bot generate password requested.')
-
-REQUESTS_GENERATE_PORT_NUMBER = Counter('bot_generate_port_number_total',
-                                        'Bot generate port number requested.')
-
-REQUESTS_GENERATE_PIN = Counter('bot_generate_pin',
-                                'Bot generate pin requested.')
-
 LAST = Gauge('bot_generate_last_time_seconds',
              'The last time a bot generate was served.')
 
@@ -38,7 +23,6 @@ def escape_markdown(text):
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    # REQUESTS_START.inc()
     REQUESTS_COMMANDS.labels('start').inc()
     """
     Обработчик команды /start. Отправляет пользователю приветственное сообщение и информацию о боте.
@@ -47,7 +31,7 @@ def start(message):
 
 @bot.message_handler(commands=['generate_nickname'])
 def generate_nickname(message):
-    REQUESTS_GENERATE_NICKNAME.inc()
+    REQUESTS_COMMANDS.labels('generate_nickname').inc()
     """
     Обработчик команды /generate_nickname. Генерирует случайное имя и отправляет его пользователю.
     """
@@ -60,7 +44,7 @@ def generate_nickname(message):
 
 @bot.message_handler(commands=['generate_password'])
 def generate_password(message):
-    REQUESTS_GENERATE_PASSWORD.inc()
+    REQUESTS_COMMANDS.labels('generate_password').inc()
     """
     Обработчик команды /generate_password. Генерирует случайный пароль из 18 символов и отправляет его пользователю.
     """
@@ -71,7 +55,7 @@ def generate_password(message):
 
 @bot.message_handler(commands=['generate_port_number'])
 def generate_port_number(message):
-    REQUESTS_GENERATE_PORT_NUMBER.inc()
+    REQUESTS_COMMANDS.labels('generate_port_number').inc()
     """
     Обработчик команды /generate_port_number. Генерирует случайный пароль логический порт для TCP/UPD.
     """
@@ -80,7 +64,7 @@ def generate_port_number(message):
 
 @bot.message_handler(commands=['generate_pin'])
 def generate_pin(message):
-    REQUESTS_GENERATE_PIN.inc()
+    REQUESTS_COMMANDS.labels('generate_pin').inc()
     """
     Обработчик команды /generate_pin. Генерирует случайный 4-значный пин-код.
     """
