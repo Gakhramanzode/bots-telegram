@@ -28,7 +28,7 @@ jobs:
 
       # Шаг 3: Устанавливаем зависимости (в нашем случае фреймворк для тестирования pytest и telebot)
       - name: Install dependencies
-        run: pip install pytest python-telegram-bot requests pytz
+        run: pip install pytest python-telegram-bot requests pytz prometheus_client
 
       # Шаг 4: Запускаем юнит-тесты с помощью pytest
       - name: Run tests

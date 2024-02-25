@@ -7,13 +7,6 @@ from pytz import timezone
 import os
 from prometheus_client import start_http_server, Counter, Gauge
 
-REQUESTS_COMMANDS = Counter('bot_football_commands',
-                         'Bot football commands requested.',
-                         labelnames=['command'])
-
-LAST = Gauge('bot_football_last_time_seconds',
-             'The last time a bot football was served.')
-
 # Задаем константы
 TOKEN = os.environ.get('weather_TOKEN')
 CHAT_ID = os.environ.get('weather_CHAT_ID')
