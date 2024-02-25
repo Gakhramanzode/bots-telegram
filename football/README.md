@@ -29,6 +29,7 @@ Football Bot - это бот для Telegram, который помогает в
 - pytz
 - schedule
 - ics
+- bot-football
 
 Вы можете установить их с помощью следующих команд:
 
