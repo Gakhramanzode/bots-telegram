@@ -55,7 +55,7 @@ sudo docker build -t weather-bot:v0.0.1 .
 
 1.	Запустите контейнер с помощью команды:
 ```bash
-sudo docker run -d --name weather-bot-container --device /dev/i2c-1 -e TELEGRAM_BOT_TOKEN=токен weather-bot:v0.0.1
+sudo docker run -d --name weather-bot-container --device /dev/i2c-1 -e TELEGRAM_BOT_TOKEN=токен -e PUSHGATEWAY_URL=<>IP:<порт>  weather-bot:v0.0.1
 ```
 Теперь бот готов к работе! Он сможет отвечать на команду `/weather`, показывая текущую температуру, давление и влажность в вашей комнате.
 

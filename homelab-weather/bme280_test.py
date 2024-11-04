@@ -1,9 +1,10 @@
+import threading
 import logging
 from smbus2 import SMBus
 from bme280 import BME280
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
-from prometheus_client import Gauge, Counter, start_http_server
+from prometheus_client import Gauge, Counter, CollectorRegistry, push_to_gateway
 import subprocess
 import sys
 import time
@@ -19,12 +20,24 @@ logging.basicConfig(
 # Снижение уровня логирования для библиотеки telegram
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
-# Настраиваем метрики Prometheus
-TEMPERATURE_GAUGE = Gauge("meteo_temperature", "Current temperature in Celsius")
-PRESSURE_GAUGE = Gauge("meteo_pressure", "Current atmospheric pressure in hPa")
-HUMIDITY_GAUGE = Gauge("meteo_humidity", "Current humidity percentage")
-BOT_START_COUNTER = Counter("bot_start_requests", "Count of /start command requests")
-BOT_WEATHER_COUNTER = Counter("bot_weather_requests", "Count of /weather command requests")
+# Настраиваем реестр и метрики для Pushgateway
+registry = CollectorRegistry()
+TEMPERATURE_GAUGE = Gauge("meteo_temperature", "Current temperature in Celsius", registry=registry)
+PRESSURE_GAUGE = Gauge("meteo_pressure", "Current atmospheric pressure in hPa", registry=registry)
+HUMIDITY_GAUGE = Gauge("meteo_humidity", "Current humidity percentage", registry=registry)
+BOT_START_COUNTER = Counter("bot_start_requests", "Count of /start command requests", registry=registry)
+BOT_WEATHER_COUNTER = Counter("bot_weather_requests", "Count of /weather command requests", registry=registry)
+
+# URL для Pushgateway, переданный в переменной окружения
+PUSHGATEWAY_URL = os.getenv("PUSHGATEWAY_URL")
+
+# Функция для отправки метрик на Pushgateway
+def push_metrics(job_name="meteo_server"):
+    try:
+        push_to_gateway(PUSHGATEWAY_URL, job=job_name, registry=registry)
+        logging.info("Метрики успешно отправлены на Pushgateway")
+    except Exception as e:
+        logging.error(f"Ошибка при отправке метрик на Pushgateway: {e}")
 
 # Функция для проверки устройства по адресу 0x76
 def check_device_address(address=0x76):
@@ -63,7 +76,7 @@ def get_weather_data(bme280):
         pressure = bme280.get_pressure()
         humidity = bme280.get_humidity()
 
-        # Обновляем метрики Prometheus
+        # Обновляем значения метрик перед отправкой на Pushgateway
         TEMPERATURE_GAUGE.set(temperature)
         PRESSURE_GAUGE.set(pressure)
         HUMIDITY_GAUGE.set(humidity)
@@ -78,6 +91,13 @@ def get_weather_data(bme280):
     except Exception as e:
         logging.error(f"Ошибка при чтении данных с датчика: {e}")
         return "Ошибка при получении данных о погоде."
+
+# Фоновая функция для периодической отправки метрик
+def background_metric_push(bme280, interval=600):
+    while True:
+        get_weather_data(bme280)  # Обновляем метрики
+        push_metrics()  # Отправляем на Pushgateway
+        time.sleep(interval)
 
 # Обработчик команды /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -122,14 +142,9 @@ if __name__ == "__main__":
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("weather", weather))
 
-    # Запуск HTTP-сервера Prometheus для экспорта метрик
-    start_http_server(51676)  # Порт 51676 для метрик Prometheus
-    logging.info("Prometheus HTTP-сервер для метрик запущен на порту 51676")
+    # Запуск фонового потока для отправки метрик
+    metric_thread = threading.Thread(target=background_metric_push, args=(bme280, 60), daemon=True)
+    metric_thread.start()
 
-    # Запускаем бота в фоновом режиме
+    # Запускаем бота в основном потоке
     application.run_polling()
-
-    # Шаг 4: Бесконечный цикл для периодического считывания данных
-    while True:
-        get_weather_data(bme280)
-        time.sleep(600)  # Интервал в 10 минут
