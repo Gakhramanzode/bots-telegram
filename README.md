@@ -12,6 +12,7 @@
 2. [:soccer: football](football/README.md)
 3. [:sun_behind_rain_cloud: weather](weather/README.md)
 4. [:twisted_rightwards_arrows: generate](generate/README.md)
+5. [:sun_behind_rain_cloud: Cloudy with a Chance - Homelab Weather Bot](homelab-weather/README.md)
 
 ## Использование
 
