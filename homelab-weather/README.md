@@ -73,5 +73,4 @@ sudo docker run -d --name weather-bot-container --device /dev/i2c-1 -e TELEGRAM_
 <img width="457" alt="image" src="https://github.com/user-attachments/assets/5424ca50-a3e7-40e2-87b7-c5649846f1d5">
 
 Еще строить свои дашборды в Grafana и создавать алерты:
-![image](https://github.com/user-attachments/assets/0f0e88de-e945-4057-8c3c-4c616a10664c)
-
+![image](https://github.com/user-attachments/assets/b0544656-7bff-46ef-9566-0ace65647c95)
