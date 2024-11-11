@@ -3,7 +3,7 @@
 Добро пожаловать! В этом проекте мы создадим простую погодную станцию с использованием микрокомпьютера Raspberry Pi Zero 2 W и датчика температуры, давления и влажности GY-BME280. А ещё этот бот будет отправлять данные о погоде через Telegram!
 
 ## Схема
-![image](https://github.com/user-attachments/assets/fbb7e4a2-3975-4c89-a073-35c688832c7f)
+![image](https://github.com/user-attachments/assets/56bd5792-04dd-48db-b623-e2fee9c1a9b6)
 
 ## Что потребуется?
 
