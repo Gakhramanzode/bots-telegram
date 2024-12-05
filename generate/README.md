@@ -27,10 +27,20 @@ sudo make altinstall
 
 ## Запуск
 
-Чтобы запустить Fridge Bot, перейдите в папку с кодом и выполните следующую команду:
+Чтобы нативно запустить Fridge Bot, перейдите в папку с кодом и выполните следующую команду:
 
-`python3.9 bot-generate.py`
+```bash
+python3.9 bot-generate.py
+```
 
+Чтобы запустить в docker-контейнере, сначала соберите docker image:
+```bash
+docker build -t bot-generate:v0.0.1 .
+```
+потом запустите контейнер:
+```bash
+docker run -d --name bot-generate -e generate_bot="токен" --restart always  bot-generate:v0.0.1
+```
 ## Использование
 
 После запуска бота вы можете использовать его для генерации никнеймов, паролей, логических портов. Для этого отправьте ему сообщение `/generate_nickname`, `/generate_password` или `/generate_port_number`. 
