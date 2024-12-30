@@ -1,7 +1,7 @@
 [![Run tests and deploy "bot-weather"](https://github.com/Gakhramanzode/bots-telegram/actions/workflows/bot-weather.yml/badge.svg)](https://github.com/Gakhramanzode/bots-telegram/actions/workflows/bot-weather.yml)
 # :sun_behind_rain_cloud: Weather Bot
 
-Weather Bot - это бот для Telegram, который помогает вам узнавать прогноз погоды.
+Weather Bot - это телеграм-бот, который помогает вам узнавать прогноз погоды.
 
 ## API
 
@@ -9,7 +9,7 @@ Weather Bot - это бот для Telegram, который помогает в�
 
 ## Установка
 
-Для запуска Weather Bot на CentOS 7 вам потребуются следующие библиотеки:
+Для запуска Weather Bot на CentOS 7 вам потребуются:
 
 - Python 3
 - python-telegram-bot
@@ -18,16 +18,41 @@ Weather Bot - это бот для Telegram, который помогает в�
 
 Вы можете установить их с помощью следующих команд:
 
+```bash
+$ sudo yum install python3 -y
+$ sudo pip3 install python-telegram-bot requests
 ```
-sudo yum install python3 -y
-sudo pip3 install python-telegram-bot requests
-```
+
+Для запуска бота в docker-контейнере вам потребуется собрать docker-образ:
+```bash
+$ docker build -t bot-weather:v0.0.1 .
+``` 
 
 ## Запуск
 
-Чтобы запустить Weather Bot, перейдите в папку с кодом и выполните следующую команду:
+Чтобы нативно запустить Weather Bot, перейдите в папку с кодом и выполните следующую команду:
 
-`python3 bot-weather.py`
+```bash
+python3 bot-weather.py
+```
+
+Чтобы запустить в docker-контейнере, выполните команду:
+
+```bash
+$ docker run -d -p <ip-адрес>:57899:57899 \
+--name bot-weather \
+-e weather_TOKEN=токен_телеграм_бота \
+-e weather_CHAT_ID=индентификатор_чата \
+-e weather_API_KEY=api-ключ \
+-e weather_CITY_ID=индентификатор_города \
+-e weather_TIMEZONE=часовой_пояс \
+-e weather_CITY_1_LAT=широта \
+-e weather_CITY_1_LON=долгота \
+-e weather_CITY_2_LAT=широта
+-e weather_CITY_2_LON=долгота \
+--restart always \
+bot-weather:v0.0.1
+```
 
 ## Использование
 
