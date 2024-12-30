@@ -38,8 +38,9 @@ $ python3.9 bot-generate.py
 Чтобы запустить в docker-контейнере, выполните команду:
 ```bash
 $ docker run -d --name bot-generate \
+-p ип-адрес:62865:62865 \
 --restart always \
--e generate_bot="токен_телеграм_бота"\
+-e generate_bot="токен_телеграм_бота" \
 bot-generate:v0.0.1
 ```
 ## Использование
