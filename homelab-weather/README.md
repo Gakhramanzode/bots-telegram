@@ -24,7 +24,13 @@
 > [!TIP]
 > Мне помог вот этот сайт https://pinouts.vercel.app/board/raspberry-pi-zero-2-w
 
-2.	Откройте терминал и проверьте подключение датчика с помощью команды:
+2. Убедитесь, что I2C включен на Raspberry Pi. Откройте raspi-config командой:
+```bash
+sudo raspi-config
+```
+Перейдите в Interface Options и включите I2C. Это позволит Raspberry Pi взаимодействовать с датчиком через I2C.
+
+4.	Откройте терминал и проверьте подключение датчика с помощью команды:
 ```bash
 i2cdetect -y 1
 ```
@@ -50,8 +56,10 @@ i2cdetect -y 1
 
 Шаг 2: Сборка Docker-образа
 
-1.	Откройте терминал и выполните команду:
+1.	Откройте терминал и выполните команды:
 ```bash
+git clone git@github.com:Gakhramanzode/bots-telegram.git
+cd bots-telegram/homelab-weather/
 sudo docker build -t weather-bot:v0.0.1 .
 ```
 Шаг 3: Запуск Docker-контейнера
