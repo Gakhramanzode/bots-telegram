@@ -6,10 +6,13 @@ WORKDIR /app
 
 # Копируем файлы бота и зависимости
 COPY requirements.txt ./
-COPY . ./
+COPY bot-weather.py ./
 
 # Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Запускаем контейнер без привилегий
+USER 65534
 
 # Указываем команду запуска
 CMD ["python", "bot-weather.py"]

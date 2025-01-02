@@ -103,6 +103,6 @@ if os.environ.get('CI'):
 
 # Основной цикл программы
 while True:
-    start_http_server(57899)
+    start_http_server(64029)
     check_time_and_send()
     time.sleep(60) # Пауза в 60 секунд
