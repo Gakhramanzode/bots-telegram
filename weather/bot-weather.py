@@ -6,6 +6,10 @@ from datetime import datetime, timedelta
 from pytz import timezone
 import os
 from prometheus_client import start_http_server, Counter, Gauge
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 # Задаем константы
 TOKEN = os.environ.get('weather_TOKEN')
@@ -26,6 +30,7 @@ bot = telegram.Bot(token=TOKEN)
 
 # Функция отправки сообщения
 def send_message(text):
+    logger.info('Успешно отправили сообщение пользователю')
     bot.send_message(chat_id=CHAT_ID, text=text)
 
 # Функция замены символа состояния погоды на соответствующие эмодзи
@@ -82,27 +87,32 @@ def get_weather():
         return f'Погода на районе:\n\n{description_1} {icon_1}\nТемпература: {temp_1}°C\nОщущается как: {feels_like_1}°C\nВлажность {humidity_1}%\nСкорость ветра: {wind_speed_1} м/с\n\nПогода на даче:\n\n{description_2} {icon_2}\nТемпература: {temp_2}°C\nОщущается как: {feels_like_2}°C\nВлажность {humidity_2}%\nСкорость ветра: {wind_speed_2} м/с'
     except Exception as e:
         print(e)
+        logger.error('Не удалось получить прогноз погоды')
         return 'Не удалось получить прогноз погоды'
 
 # Функция проверки времени и отправки сообщения
 def check_time_and_send():
     now = datetime.now(timezone(TIMEZONE))
     if now.hour == 7 and now.minute == 30:
+        logger.info('Send message on 07:30')
         send_message(get_weather())
     elif now.hour == 13 and now.minute == 30:
+        logger.info('Send message on 13:30')
         send_message(get_weather())
     elif now.hour == 17 and now.minute == 30:
+        logger.info('Send message on 17:30')
         send_message(get_weather())
     elif now.hour == 20 and now.minute == 30:
+        logger.info('Send message on 20:30')
         send_message(get_weather())
     elif now.hour == 3 and now.minute == 0:
+        logger.info('Send message on 03:00')
         send_message(get_weather())
 
-if os.environ.get('CI'):
-    exit(0)
+# Запускаем HTTP-сервер Prometheus один раз перед циклом
+start_http_server(64029)
 
 # Основной цикл программы
 while True:
-    start_http_server(64029)
     check_time_and_send()
     time.sleep(60) # Пауза в 60 секунд
