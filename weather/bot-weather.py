@@ -7,6 +7,7 @@ from pytz import timezone
 import os
 from prometheus_client import start_http_server, Counter, Gauge
 import logging
+import asyncio
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -28,11 +29,10 @@ weather_CITY_2_LON = os.environ.get('weather_CITY_2_LON')
 # Создаем объект бота
 bot = telegram.Bot(token=TOKEN)
 
-# Функция отправки сообщения
-def send_message(text):
-    logger.info('Успешно отправили сообщение пользователю')
-    bot.send_message(chat_id=CHAT_ID, text=text)
-
+# Асинхронная функция отправки сообщения
+async def send_message(text):
+    await bot.send_message(chat_id=CHAT_ID, text=text
+)
 # Функция замены символа состояния погоды на соответствующие эмодзи
 def get_weather_emoji(icon_code):
     weather_icons = {
@@ -90,8 +90,8 @@ def get_weather():
         logger.error('Не удалось получить прогноз погоды')
         return 'Не удалось получить прогноз погоды'
 
-# Функция проверки времени и отправки сообщения
-def check_time_and_send():
+# Асинхронная функция проверки времени и отправки сообщения
+async def check_time_and_send():
     now = datetime.now(timezone(TIMEZONE))
     if now.hour == 7 and now.minute == 30:
         logger.info('Send message on 07:30')
@@ -109,10 +109,15 @@ def check_time_and_send():
         logger.info('Send message on 03:00')
         send_message(get_weather())
 
-# Запускаем HTTP-сервер Prometheus один раз перед циклом
-start_http_server(64029)
+async def main():
+    # Запускаем HTTP-сервер Prometheus
+    start_http_server(64029)
 
-# Основной цикл программы
-while True:
-    check_time_and_send()
-    time.sleep(60) # Пауза в 60 секунд
+    # Основной цикл программы
+    while True:
+        await check_time_and_send()
+        await asyncio.sleep(60)  # Асинхронная пауза в 60 секунд
+
+# Запускаем основную программу
+if __name__ == "__main__":
+    asyncio.run(main())
