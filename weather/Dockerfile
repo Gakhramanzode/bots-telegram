@@ -5,8 +5,8 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Копируем файлы бота и зависимости
-COPY requirements.txt ./
 COPY bot-weather.py ./
+COPY requirements.txt ./
 
 # Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
@@ -16,4 +16,3 @@ USER 65534
 
 # Указываем команду запуска
 CMD ["python", "bot-weather.py"]
-
