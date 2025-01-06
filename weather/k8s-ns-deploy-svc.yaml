@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: bot-weather
-        image: cr.yandex/crpptug9umccrqsi3b8b/bot-weather:v0.0.10
+        image: cr.yandex/crpptug9umccrqsi3b8b/bot-weather:v0.0.11
         ports:
         - containerPort: 64029
         env:

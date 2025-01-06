@@ -177,6 +177,7 @@ async def main():
     отправляет сообщение в Telegram.
     """
     from prometheus_client import start_http_server
+    logging.info('Start http server')
     start_http_server(57899)  # Запускаем Prometheus на одном порту один раз
 
     while True:
