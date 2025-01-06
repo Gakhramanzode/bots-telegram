@@ -5,7 +5,13 @@ import os
 from prometheus_client import start_http_server, Counter, Gauge
 import logging
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# ==========================
+# Настройка логирования
+# ==========================
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
 
 bot=telebot.TeleBot(os.environ.get('generate_bot'))
@@ -81,10 +87,9 @@ def generate_pin(message):
     pin = ''.join(random.choice(string.digits) for _ in range(4))
     bot.send_message(message.chat.id, f'Random pin number:\n```\n{pin}\n```', parse_mode='MarkdownV2')
 
-if os.environ.get('CI'):
-    logger.info('Commands CI')
-    exit(0)
-
+# ==========================
+# Точка входа
+# ==========================
 if __name__ == "__main__":
     start_http_server(62865)
     logging.info('Start http server')
