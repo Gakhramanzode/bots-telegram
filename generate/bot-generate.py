@@ -14,6 +14,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Скрываем детальные логи telegram / httpx, чтобы не утекал токен
+logging.getLogger('httpx').setLevel(logging.WARNING)
+logging.getLogger('telegram').setLevel(logging.WARNING)
+logging.getLogger('telegram.vendor.ptb_urllib3.urllib3.connectionpool').setLevel(logging.WARNING)
+
 bot=telebot.TeleBot(os.environ.get('generate_bot'))
 
 REQUESTS_COMMANDS = Counter('bot_generate_commands',
