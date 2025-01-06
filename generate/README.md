@@ -1,4 +1,3 @@
-[![Run tests and deploy "bot-generate"](https://github.com/Gakhramanzode/bots-telegram/actions/workflows/bot-generate.yml/badge.svg)](https://github.com/Gakhramanzode/bots-telegram/actions/workflows/bot-generate.yml)
 # :twisted_rightwards_arrows: Generate Bot
 
 Generate Bot - это телеграм-бот, который генерирует случайный образом никнейм, сложный пароль из 18 символов или номер логического порта для TCP/UDP. [Ссылка](https://t.me/generate_asker_bot) на пример бота.
