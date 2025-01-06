@@ -1,49 +1,60 @@
-import telegram
-import requests
-import json
-import time
-from datetime import datetime, timedelta
-from pytz import timezone
 import os
-from prometheus_client import start_http_server, Counter, Gauge
+import json
+import requests
 import logging
 import asyncio
+from datetime import datetime
+from pytz import timezone
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Библиотеки Prometheus и telegram
+from prometheus_client import start_http_server
+import telegram
+
+# ==========================
+# Настройка логирования
+# ==========================
+logging.basicConfig(
+    level=logging.INFO, 
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
 
-# Задаем константы
-TOKEN = os.environ.get('weather_TOKEN')
+# Скрываем детальные логи telegram / httpx, чтобы не утекал токен
+logging.getLogger('httpx').setLevel(logging.WARNING)
+logging.getLogger('telegram').setLevel(logging.WARNING)
+logging.getLogger('telegram.vendor.ptb_urllib3.urllib3.connectionpool').setLevel(logging.WARNING)
+
+# ==========================
+# Переменные окружения
+# ==========================
+TOKEN   = os.environ.get('weather_TOKEN')
 CHAT_ID = os.environ.get('weather_CHAT_ID')
 API_KEY = os.environ.get('weather_API_KEY')
-TIMEZONE = os.environ.get('weather_TIMEZONE')
+TIMEZONE_NAME = os.environ.get('weather_TIMEZONE')
 
-# Задаем координаты города 1
-weather_CITY_1_LAT = os.environ.get('weather_CITY_1_LAT')
-weather_CITY_1_LON = os.environ.get('weather_CITY_1_LON')
+CITY_1_LAT = os.environ.get('weather_CITY_1_LAT')
+CITY_1_LON = os.environ.get('weather_CITY_1_LON')
+CITY_2_LAT = os.environ.get('weather_CITY_2_LAT')
+CITY_2_LON = os.environ.get('weather_CITY_2_LON')
 
-# Задаем координаты города 2
-weather_CITY_2_LAT = os.environ.get('weather_CITY_2_LAT')
-weather_CITY_2_LON = os.environ.get('weather_CITY_2_LON')
-
-# Создаем объект бота
+# ==========================
+# Создаём бота
+# ==========================
 bot = telegram.Bot(token=TOKEN)
 
-# Асинхронная функция отправки сообщения
-async def send_message(text):
-    await bot.send_message(chat_id=CHAT_ID, text=text
-)
-# Функция замены символа состояния погоды на соответствующие эмодзи
-def get_weather_emoji(icon_code):
+# ==========================
+# Эмодзи для иконок погоды
+# ==========================
+def get_weather_emoji(icon_code: str) -> str:
     weather_icons = {
-        '01d': '☀️',  # ясно (день)
-        '01n': '🌙',  # ясно (ночь)
+        '01d': '☀️',   # ясно (день)
+        '01n': '🌙',   # ясно (ночь)
         '02d': '🌤️',  # малооблачно (день)
-        '02n': '☁️🌙',  # малооблачно (ночь)
-        '03d': '☁️',  # облачно с прояснениями (день)
-        '03n': '☁️',  # облачно с прояснениями (ночь)
-        '04d': '☁️',  # облачно (день)
-        '04n': '☁️',  # облачно (ночь)
+        '02n': '☁️🌙', # малооблачно (ночь)
+        '03d': '☁️',   # облачно с прояснениями (день)
+        '03n': '☁️',   # облачно с прояснениями (ночь)
+        '04d': '☁️',   # облачно (день)
+        '04n': '☁️',   # облачно (ночь)
         '09d': '🌧️',  # дождь (день)
         '09n': '🌧️',  # дождь (ночь)
         '10d': '🌦️',  # дождь с прояснениями (день)
@@ -57,67 +68,125 @@ def get_weather_emoji(icon_code):
     }
     return weather_icons.get(icon_code, '')
 
-# Функция получения прогноза погоды
-def get_weather():
+# ==========================
+# Получение погоды (синхронно)
+# ==========================
+def get_weather() -> str:
+    """
+    Возвращает детализированное сообщение о погоде:
+    - "Погода на районе" (CITY_1_LAT/LON)
+    - "Погода на даче"   (CITY_2_LAT/LON)
+    """
     try:
-        url_1 = f'https://api.openweathermap.org/data/2.5/weather?lat={weather_CITY_1_LAT}&lon={weather_CITY_1_LON}&appid={API_KEY}&lang=ru&units=metric'
+        # ---- Город 1 ----
+        url_1 = (
+            f"https://api.openweathermap.org/data/2.5/weather?"
+            f"lat={CITY_1_LAT}&lon={CITY_1_LON}&appid={API_KEY}&lang=ru&units=metric"
+        )
         response_1 = requests.get(url_1)
         data_1 = json.loads(response_1.text)
-        description_1 = data_1['weather'][0]['description']
-        description_1 = description_1.capitalize()
-        icon_1 = data_1['weather'][0]['icon']
-        icon_1 = get_weather_emoji(icon_1)
+
+        description_1 = data_1['weather'][0]['description'].capitalize()
+        icon_1 = get_weather_emoji(data_1['weather'][0]['icon'])
         temp_1 = data_1['main']['temp']
         feels_like_1 = data_1['main']['feels_like']
         wind_speed_1 = data_1['wind']['speed']
         humidity_1 = data_1['main']['humidity']
 
-        url_2 = f'https://api.openweathermap.org/data/2.5/weather?lat={weather_CITY_2_LAT}&lon={weather_CITY_2_LON}&appid={API_KEY}&lang=ru&units=metric'
+        # ---- Город 2 ----
+        url_2 = (
+            f"https://api.openweathermap.org/data/2.5/weather?"
+            f"lat={CITY_2_LAT}&lon={CITY_2_LON}&appid={API_KEY}&lang=ru&units=metric"
+        )
         response_2 = requests.get(url_2)
         data_2 = json.loads(response_2.text)
-        description_2 = data_2['weather'][0]['description']
-        description_2 = description_2.capitalize()
-        icon_2 = data_2['weather'][0]['icon']
-        icon_2 = get_weather_emoji(icon_2)
+
+        description_2 = data_2['weather'][0]['description'].capitalize()
+        icon_2 = get_weather_emoji(data_2['weather'][0]['icon'])
         temp_2 = data_2['main']['temp']
         feels_like_2 = data_2['main']['feels_like']
         wind_speed_2 = data_2['wind']['speed']
         humidity_2 = data_2['main']['humidity']
 
-        return f'Погода на районе:\n\n{description_1} {icon_1}\nТемпература: {temp_1}°C\nОщущается как: {feels_like_1}°C\nВлажность {humidity_1}%\nСкорость ветра: {wind_speed_1} м/с\n\nПогода на даче:\n\n{description_2} {icon_2}\nТемпература: {temp_2}°C\nОщущается как: {feels_like_2}°C\nВлажность {humidity_2}%\nСкорость ветра: {wind_speed_2} м/с'
+        message = (
+            f"Погода на районе:\n\n"
+            f"{description_1} {icon_1}\n"
+            f"Температура: {temp_1}°C\n"
+            f"Ощущается как: {feels_like_1}°C\n"
+            f"Влажность {humidity_1}%\n"
+            f"Скорость ветра: {wind_speed_1} м/с\n\n"
+            f"Погода на даче:\n\n"
+            f"{description_2} {icon_2}\n"
+            f"Температура: {temp_2}°C\n"
+            f"Ощущается как: {feels_like_2}°C\n"
+            f"Влажность {humidity_2}%\n"
+            f"Скорость ветра: {wind_speed_2} м/с"
+        )
+        return message
+
     except Exception as e:
-        print(e)
-        logger.error('Не удалось получить прогноз погоды')
-        return 'Не удалось получить прогноз погоды'
+        logger.error(f"Не удалось получить прогноз погоды: {e}")
+        return "Не удалось получить прогноз погоды"
 
-# Асинхронная функция проверки времени и отправки сообщения
-async def check_time_and_send():
-    now = datetime.now(timezone(TIMEZONE))
-    if now.hour == 7 and now.minute == 30:
-        logger.info('Send message on 07:30')
-        send_message(get_weather())
-    elif now.hour == 13 and now.minute == 30:
-        logger.info('Send message on 13:30')
-        send_message(get_weather())
-    elif now.hour == 17 and now.minute == 30:
-        logger.info('Send message on 17:30')
-        send_message(get_weather())
-    elif now.hour == 20 and now.minute == 30:
-        logger.info('Send message on 20:30')
-        send_message(get_weather())
-    elif now.hour == 3 and now.minute == 0:
-        logger.info('Send message on 03:00')
-        send_message(get_weather())
+# ==========================
+# Асинхронная отправка сообщения
+# ==========================
+async def send_message(text: str) -> None:
+    """
+    Асинхронно отправляет сообщение в Telegram-чат
+    """
+    try:
+        await bot.send_message(chat_id=CHAT_ID, text=text)
+        logger.info("Сообщение отправлено")
+    except Exception as e:
+        logger.error(f"Ошибка при отправке сообщения: {e}")
 
+# ==========================
+# Асинхронная проверка времени
+# ==========================
+async def check_time_and_send() -> None:
+    """
+    Проверяет текущее время в заданном часовом поясе
+    и отправляет сообщение в Telegram, если совпадает с нужным временем:
+    03:00, 07:30, 13:30, 17:30, 20:30
+    """
+    now = datetime.now(timezone(TIMEZONE_NAME))
+    current_hour = now.hour
+    current_minute = now.minute
+
+    # Список нужных пар (часы, минуты)
+    scheduled_times = [
+        (3, 0),
+        (7, 30),
+        (13, 30),
+        (17, 30),
+        (20, 30),
+    ]
+
+    if (current_hour, current_minute) in scheduled_times:
+        weather_info = get_weather()  # Синхронное получение погоды
+        await send_message(weather_info)
+
+# ==========================
+# Основной асинхронный цикл
+# ==========================
 async def main():
-    # Запускаем HTTP-сервер Prometheus
-    start_http_server(64029)
+    """
+    Запускает HTTP-сервер Prometheus для метрик на порту 57899,
+    и затем каждую минуту проверяет время и при необходимости
+    отправляет сообщение в Telegram.
+    """
+    from prometheus_client import start_http_server
+    start_http_server(57899)  # Запускаем Prometheus на одном порту один раз
 
-    # Основной цикл программы
     while True:
         await check_time_and_send()
         await asyncio.sleep(60)  # Асинхронная пауза в 60 секунд
 
-# Запускаем основную программу
+# ==========================
+# Точка входа
+# ==========================
 if __name__ == "__main__":
+    logging.info('Start bot polling')
     asyncio.run(main())
+

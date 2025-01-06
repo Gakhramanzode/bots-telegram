@@ -1,0 +1,120 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bot-weather
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot-weather
+  labels:
+    app: bot-weather
+  namespace: bot-weather
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: bot-weather
+  template:
+    metadata:
+      labels:
+        app: bot-weather
+    spec:
+      containers:
+      - name: bot-weather
+        image: cr.yandex/crpptug9umccrqsi3b8b/bot-weather:v0.0.9
+        ports:
+        - containerPort: 64029
+        env:
+          - name: weather_TIMEZONE
+            value: "Europe/Moscow"
+          - name: weather_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: telegram-bot-secret
+                key: WEATHER_TOKEN
+          - name: weather_CHAT_ID
+            valueFrom:
+              secretKeyRef:
+                name: telegram-bot-secret
+                key: WEATHER_CHAT_ID
+          - name: weather_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: telegram-bot-secret
+                key: WEATHER_API_KEY
+          - name: weather_CITY_ID
+            valueFrom:
+              secretKeyRef:
+                name: telegram-bot-secret
+                key: WEATHER_CITY_ID
+          - name: weather_CITY_1_LAT
+            valueFrom:
+              secretKeyRef:
+                name: telegram-bot-secret
+                key: WEATHER_CITY_1_LAT
+          - name: weather_CITY_1_LON
+            valueFrom:
+              secretKeyRef:
+                name: telegram-bot-secret
+                key: WEATHER_CITY_1_LON
+          - name: weather_CITY_2_LAT
+            valueFrom:
+              secretKeyRef:
+                name: telegram-bot-secret
+                key: WEATHER_CITY_2_LAT
+          - name: weather_CITY_2_LON
+            valueFrom:
+              secretKeyRef:
+                name: telegram-bot-secret
+                key: WEATHER_CITY_2_LON
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false # Запрещаем эскалацию привилегий
+          capabilities:
+            drop:
+            - ALL # Убираем все дополнительные права
+          runAsNonRoot: true # Запускаем контейнер от имени не-root пользователя
+          seccompProfile:
+            type: RuntimeDefault # Используем профиль Seccomp по умолчанию
+      imagePullSecrets:
+      - name: yandex-docker-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bot-weather-service
+  labels:
+    app: bot-weather
+  namespace: bot-weather
+spec:
+  type: ClusterIP
+  selector:
+    app: bot-weather
+  ports:
+  - protocol: TCP
+    port: 64029
+    targetPort: 64029
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bot-weather-ingress
+  namespace: bot-weather
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/whitelist-source-range: "10.128.0.5"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /bot-weather/metrics
+        pathType: Prefix
+        backend:
+          service:
+            name: bot-weather-service
+            port:
+              number: 64029

@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bot-generate
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot-generate
+  labels:
+    app: bot-generate
+  namespace: bot-generate
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: bot-generate
+  template:
+    metadata:
+      labels:
+        app: bot-generate
+    spec:
+      containers:
+      - name: bot-generate
+        image: cr.yandex/crpptug9umccrqsi3b8b/bot-generate:v0.0.3
+        ports:
+        - containerPort: 62865
+        env:
+          - name: generate_bot
+            valueFrom:
+              secretKeyRef:
+                name: telegram-bot-secret
+                key: TELEGRAM_BOT_TOKEN
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false # Запрещаем эскалацию привилегий
+          capabilities:
+            drop:
+            - ALL # Убираем все дополнительные права
+          runAsNonRoot: true # Запускаем контейнер от имени не-root пользователя
+          seccompProfile:
+            type: RuntimeDefault # Используем профиль Seccomp по умолчанию
+      imagePullSecrets:
+      - name: yandex-docker-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bot-generate-service
+  labels:
+    app: bot-generate
+  namespace: bot-generate
+spec:
+  type: ClusterIP
+  selector:
+    app: bot-generate
+  ports:
+  - protocol: TCP
+    port: 62865
+    targetPort: 62865
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bot-generate-ingress
+  namespace: bot-generate
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/whitelist-source-range: "10.128.0.5"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /bot-generate/metrics
+        pathType: Prefix
+        backend:
+          service:
+            name: bot-generate-service
+            port:
+              number: 62865
