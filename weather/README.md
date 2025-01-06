@@ -1,4 +1,3 @@
-[![Run tests and deploy "bot-weather"](https://github.com/Gakhramanzode/bots-telegram/actions/workflows/bot-weather.yml/badge.svg)](https://github.com/Gakhramanzode/bots-telegram/actions/workflows/bot-weather.yml)
 # :sun_behind_rain_cloud: Weather Bot
 
 Weather Bot - это телеграм-бот, который помогает вам узнавать прогноз погоды.
