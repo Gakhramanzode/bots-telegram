@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: bot-generate
-        image: cr.yandex/crpptug9umccrqsi3b8b/bot-generate:v0.0.3
+        image: cr.yandex/crpptug9umccrqsi3b8b/bot-generate:v0.0.5
         ports:
         - containerPort: 62865
         env:
@@ -35,13 +35,13 @@ spec:
                 key: TELEGRAM_BOT_TOKEN
         imagePullPolicy: IfNotPresent
         securityContext:
-          allowPrivilegeEscalation: false # Запрещаем эскалацию привилегий
+          allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL # Убираем все дополнительные права
-          runAsNonRoot: true # Запускаем контейнер от имени не-root пользователя
+            - ALL
+          runAsNonRoot: true
           seccompProfile:
-            type: RuntimeDefault # Используем профиль Seccomp по умолчанию
+            type: RuntimeDefault
       imagePullSecrets:
       - name: yandex-docker-registry
 ---

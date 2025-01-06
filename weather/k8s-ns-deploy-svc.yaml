@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: bot-weather
-        image: cr.yandex/crpptug9umccrqsi3b8b/bot-weather:v0.0.9
+        image: cr.yandex/crpptug9umccrqsi3b8b/bot-weather:v0.0.10
         ports:
         - containerPort: 64029
         env:
@@ -72,13 +72,13 @@ spec:
                 key: WEATHER_CITY_2_LON
         imagePullPolicy: IfNotPresent
         securityContext:
-          allowPrivilegeEscalation: false # Запрещаем эскалацию привилегий
+          allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL # Убираем все дополнительные права
-          runAsNonRoot: true # Запускаем контейнер от имени не-root пользователя
+            - ALL
+          runAsNonRoot: true
           seccompProfile:
-            type: RuntimeDefault # Используем профиль Seccomp по умолчанию
+            type: RuntimeDefault
       imagePullSecrets:
       - name: yandex-docker-registry
 ---

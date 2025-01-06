@@ -5,8 +5,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Копируем файлы бота и зависимости
-COPY bot-generate.py /app/
-COPY requirements.txt /app/
+COPY bot-generate.py requirements.txt  /app/
 
 # Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
