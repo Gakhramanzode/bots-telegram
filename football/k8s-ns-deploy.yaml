@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bot-football
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot-football
+  labels:
+    app: bot-footballe
+  namespace: bot-football
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: bot-football
+  template:
+    metadata:
+      labels:
+        app: bot-football
+    spec:
+      containers:
+      - name: bot-football
+        image: cr.yandex/crpptug9umccrqsi3b8b/bot-football:v0.0.2
+        env:
+          - name: football_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: football-secrets
+                key: football_TOKEN
+          - name: football_CHAT_ID
+            valueFrom:
+              secretKeyRef:
+                name: football-secrets
+                key: football_CHAT_ID
+          - name: football_API_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: football-secrets
+                key: football_API_TOKEN
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+      imagePullSecrets:
+      - name: yandex-docker-registry
