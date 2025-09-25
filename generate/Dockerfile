@@ -1,17 +1,23 @@
-# Указываем базовый образ с Python
-FROM python:3.9-slim
+FROM golang:1.24 as builder
 
-# Устанавливаем рабочую директорию
-WORKDIR /app
+ENV CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64
 
-# Копируем файлы бота и зависимости
-COPY bot-generate.py requirements.txt  /app/
+WORKDIR /build
 
-# Устанавливаем зависимости
-RUN pip install --no-cache-dir -r requirements.txt
+COPY go.mod .
 
-# Запускаем контейнер без привилегий
-USER 65534
+RUN go mod download
 
-# Указываем команду запуска
-CMD ["python3", "bot-generate.py"]
+COPY . .
+
+RUN go mod tidy && go build -o main .
+
+FROM alpine:3.21
+
+COPY --from=builder /build/main .
+
+USER nobody
+
+CMD ["./main"]
