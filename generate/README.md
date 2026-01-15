@@ -1,51 +1,24 @@
 # :twisted_rightwards_arrows: Generate Bot
 
-Generate Bot - это телеграм-бот, который генерирует случайный образом никнейм, сложный пароль из 18 символов или номер логического порта для TCP/UDP. [Ссылка](https://t.me/generate_asker_bot) на пример бота.
-
-## Установка
-
-Для запуска Generate Bot на CentOS 7 вот потребуется:
-
-- Python 3.9
-- python-telegram-bot
-
-Вы можете установить их с помощью следующих команд:
-```bash
-$ sudo yum install python3 -y
-$ sudo yum install -y gcc openssl-devel bzip2-devel libffi-devel
-$ cd /opt
-$ sudo wget https://www.python.org/ftp/python/3.9.0/Python-3.9.0.tgz
-$ sudo tar xzf Python-3.9.0.tgz
-$ cd Python-3.9.0
-$ sudo ./configure --enable-optimizations
-$ sudo make altinstall
-```
-
-Для запуска бота в docker-контейнере вам потребуется собрать docker-образ:
-```bash
-$ docker build -t bot-generate:v0.0.1 .
-```
+Generate Bot - это бот для telegram, который генерирует пин-код, никнейм, номер логического порта для TCP/UDP или пароль.
 
 ## Запуск
-
-Чтобы нативно запустить Generate Bot, перейдите в папку с кодом и выполните следующую команду:
-
+Для запуска бота в docker-контейнере вам потребуется собрать docker-образ:
 ```bash
-$ python3.9 bot-generate.py
+docker build -t bot-generate:v0.1.0 .
 ```
+Переходим в telegram, пишем https://t.me/BotFather, создаем своего бота и получаем от него токен.
 
-Чтобы запустить в docker-контейнере, выполните команду:
+Чтобы запустить в docker-контейнере, выполняем команду:
 ```bash
-$ docker run -d --name bot-generate \
--p ип-адрес:62865:62865 \
+docker run --name bot-generate \
 --restart always \
--e generate_bot="токен_телеграм_бота" \
-bot-generate:v0.0.1
+-e GENERATE_BOT_TOKEN="токен_телеграм_бота" \
+bot-generate:v0.1.0
 ```
 ## Использование
 
 После запуска бота вы можете использовать его для генерации никнеймов, паролей, логических портов. Для этого отправьте ему сообщение `/generate_nickname`, `/generate_password` или `/generate_port_number`. 
 
 Пример диалога с ботом:
-
 <img width="385" alt="Снимок экрана 2023-04-20 173537" src="https://user-images.githubusercontent.com/62985982/233399773-1260186a-201a-4ff0-9da8-755d6f120a28.png">

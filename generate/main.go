@@ -6,8 +6,11 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/goombaio/namegenerator"
+	"github.com/sethvargo/go-password/password"
 )
 
 func main() {
@@ -61,7 +64,8 @@ func main() {
 				log.Println("Command /generate_nickname received")
 
 				// Call the nickname generation function
-				nickname := generateNickname()
+				nameGenerator := namegenerator.NewNameGenerator(time.Now().UTC().UnixNano())
+				nickname := nameGenerator.Generate()
 
 				// Send the generated nickname to the user with Markdown formatting
 				text := "Your random nickname:\n```\n" + nickname + "\n```"
@@ -87,7 +91,10 @@ func main() {
 				log.Println("Command /generate_password received")
 
 				// Call the password generation function
-				password := generatePassword(18)
+				password, err := password.Generate(18, 5, 5, false, false)
+				if err != nil {
+					log.Fatal(err)
+				}
 				escaped := escapeMarkdownV2(password)
 
 				// Send the generated password to the user with Markdown formatting
@@ -110,23 +117,6 @@ func generatePIN() string {
 		pin += strconv.Itoa(digit)
 	}
 	return pin
-}
-
-// Nickname generation logic
-func generateNickname() string {
-	// List words to use for nickname generation
-	adjectives := []string{
-		"adorable", "adventurous", "amazing", "ambitious", "amusing", "awesome", "brave", "bright", "calm", "charming",
-		"cheerful", "clever", "confident", "creative", "daring", "delightful", "determined", "eager", "energetic", "enthusiastic",
-	}
-	animals := []string{
-		"alligator", "antelope", "armadillo", "baboon", "badger", "bat", "bear", "beaver", "bee", "bison",
-		"boar", "buffalo", "butterfly", "camel", "cat", "cheetah", "chicken", "chimpanzee", "cow", "coyote",
-	}
-
-	adjective := adjectives[rand.Intn(len(adjectives))]
-	animal := animals[rand.Intn(len(animals))]
-	return adjective + "_" + animal
 }
 
 // Port number generation logic
@@ -152,21 +142,4 @@ func escapeMarkdownV2(text string) string {
 		}
 	}
 	return escaped
-}
-
-// Function to generate a random password
-func generatePassword(length int) string {
-	// Seed the random number generator
-	letters := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	digits := "0123456789"
-	punctuation := `!"#$%&'()*+,-./:;<=>?@[\]^_{|}~`
-	all := letters + digits + punctuation
-
-	// Generate a random password
-	var password strings.Builder
-	for i := 0; i < length; i++ {
-		index := rand.Intn(len(all))
-		password.WriteByte(all[index])
-	}
-	return password.String()
 }
